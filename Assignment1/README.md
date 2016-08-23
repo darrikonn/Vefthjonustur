@@ -23,4 +23,4 @@ It should support the following operations:
 > curl -i -X GET localhost:5000/api/courses/0/students
 
 ### Add a student to a course (10%)
-> curl -i -X POST -d "SSN=1501933119&Name=Darri%20Steinn%20Konradsson" localhost:5000/api/courses/1/students
+> curl -i -X POST -d "SSN=1501933119&Name=Darri%20Steinn%20Konradsson" localhost:5000/api/courses/0/students
