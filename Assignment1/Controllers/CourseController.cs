@@ -25,7 +25,7 @@ namespace WebApplication.Controllers {
                         TemplateId = "T-514-VEFT",
                         StartDate  = DateTime.Now,
                         EndDate    = DateTime.Now.AddMonths(3),
-                        Students    = studentService.CreateStudents(3)
+                        Students   = studentService.CreateStudents(3)
                     },
                     new Course {
                         Id         = 1,
@@ -33,7 +33,7 @@ namespace WebApplication.Controllers {
                         TemplateId = "T-550-Litur",
                         StartDate  = DateTime.Now,
                         EndDate    = DateTime.Now.AddMonths(3),
-                        Students    = studentService.CreateStudents(2)
+                        Students   = studentService.CreateStudents(2)
                     },
                     new Course {
                         Id         = 2,
@@ -41,7 +41,7 @@ namespace WebApplication.Controllers {
                         TemplateId = "T-411-WEPO",
                         StartDate  = DateTime.Now,
                         EndDate    = DateTime.Now.AddMonths(4),
-                        Students    = studentService.CreateStudents(4)
+                        Students   = studentService.CreateStudents(4)
                     },
                     new Course {
                         Id         = 3,
@@ -49,7 +49,7 @@ namespace WebApplication.Controllers {
                         TemplateId = "T-210-Forhud",
                         StartDate  = DateTime.Now,
                         EndDate    = DateTime.Now.AddMonths(3),
-                        Students    = studentService.CreateStudents(5)
+                        Students   = studentService.CreateStudents(5)
                     },
                     new Course {
                         Id         = 4,
@@ -57,7 +57,7 @@ namespace WebApplication.Controllers {
                         TemplateId = "T-120-Gaggalagu",
                         StartDate  = DateTime.Now,
                         EndDate    = DateTime.Now.AddMonths(1),
-                        Students    = studentService.CreateStudents(3)
+                        Students   = studentService.CreateStudents(3)
                     }
                 };
             }
