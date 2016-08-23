@@ -1,39 +1,26 @@
-# Welcome to ASP.NET Core
+# Assignment 1
+The first assignment is to design and create a REST service using .NET Core and ASP.NET Web API. It should model courses and their students.
 
-We've made some big updates in this release, so it’s **important** that you spend a few minutes to learn what’s new.
+## Operations
+It should support the following operations:
 
-You've created a new ASP.NET Core project. [Learn what's new](https://go.microsoft.com/fwlink/?LinkId=518016)
+### Get a list of courses (10%)
+> curl -i -X GET localhost:5000/api/courses
 
-## This application consists of:
+### Add a course (10%)
+> curl -i -d "Name=Darri%20Steinn&TemplateId=T-55-Dar&startDate=2016-11-22&endDate=2016-12-22" -X POST localhost:5000/api/courses
 
-*   Sample pages using ASP.NET Core MVC
-*   [Gulp](https://go.microsoft.com/fwlink/?LinkId=518007) and [Bower](https://go.microsoft.com/fwlink/?LinkId=518004) for managing client-side libraries
-*   Theming using [Bootstrap](https://go.microsoft.com/fwlink/?LinkID=398939)
+### Update a course (10%)
+> curl -i -d "Name=Darri%20Steinn&TemplateId=T-55-Dar&startDate=2016-11-22&endDate=2016-12-22" -X PUT localhost:5000/api/courses/0
 
-## How to
+### Delete a course (10%)
+> curl -i -X DELETE localhost:5000/api/courses/1
 
-*   [Add a Controller and View](https://go.microsoft.com/fwlink/?LinkID=398600)
-*   [Add an appsetting in config and access it in app.](https://go.microsoft.com/fwlink/?LinkID=699562)
-*   [Manage User Secrets using Secret Manager.](https://go.microsoft.com/fwlink/?LinkId=699315)
-*   [Use logging to log a message.](https://go.microsoft.com/fwlink/?LinkId=699316)
-*   [Add packages using NuGet.](https://go.microsoft.com/fwlink/?LinkId=699317)
-*   [Add client packages using Bower.](https://go.microsoft.com/fwlink/?LinkId=699318)
-*   [Target development, staging or production environment.](https://go.microsoft.com/fwlink/?LinkId=699319)
+### Get a course with a given ID (10%)
+> curl -i -X GET localhost:5000/api/courses/0
 
-## Overview
+### Get a list of students in a course (10%)
+> curl -i -X GET localhost:5000/api/courses/0/students
 
-*   [Conceptual overview of what is ASP.NET Core](https://go.microsoft.com/fwlink/?LinkId=518008)
-*   [Fundamentals of ASP.NET Core such as Startup and middleware.](https://go.microsoft.com/fwlink/?LinkId=699320)
-*   [Working with Data](https://go.microsoft.com/fwlink/?LinkId=398602)
-*   [Security](https://go.microsoft.com/fwlink/?LinkId=398603)
-*   [Client side development](https://go.microsoft.com/fwlink/?LinkID=699321)
-*   [Develop on different platforms](https://go.microsoft.com/fwlink/?LinkID=699322)
-*   [Read more on the documentation site](https://go.microsoft.com/fwlink/?LinkID=699323)
-
-## Run & Deploy
-
-*   [Run your app](https://go.microsoft.com/fwlink/?LinkID=517851)
-*   [Run tools such as EF migrations and more](https://go.microsoft.com/fwlink/?LinkID=517853)
-*   [Publish to Microsoft Azure Web Apps](https://go.microsoft.com/fwlink/?LinkID=398609)
-
-We would love to hear your [feedback](https://go.microsoft.com/fwlink/?LinkId=518015)
+### Add a student to a course (10%)
+> curl -i -X POST -d "SSN=1501933119&Name=Darri%20Steinn%20Konradsson" localhost:5000/api/courses/1/students
