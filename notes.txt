@@ -1,0 +1,71 @@
+// rendered on server
+public ActionResult bla() {
+    return View(new ViewModel());
+}
+
+// rendered on client
+public ActionResult bla() {
+    return Json(new ViewModel(), JsonBehavior.AllowGet);
+}
+
+
+/*
+ * rest service
+*/
+
+/records
+/records/75
+/records/75/songs/842/lyrics
+
+/records
+/songs
+/performers
+
+(ekki bua til api sem er svona: /getrecords)
+HTTP Verbs bydur upp a GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD, ...
+hafa frekar resource-id /records
+
+        /records                /records/75
+GET     skilar lista            skilar staki
+POST    byr til nyja plotu      X
+PUT     X                       
+DELETE  eydir lista             eydir staki
+PATCH   X                       breytir staki (ad hluta)
+
+
+Ef GET a 75 er ekki til, tha kemur til sogunnar HTTP Status Codes (404) = https://http.cat
+200 = OK
+201 = Created (fyrir post)
+204 = No Content
+400 = Bad Request
+401 = Unauthorized
+403 = Forbidden
+404 = Not Found
+500 = Internal Server Error
+
+
+/*
+ * ASP.NET Core
+*/
+// keyra thetta i command linu
+dotnet new -t web
+// restore-ar nuget
+dotnet restore
+dotnet build
+dotnet run
+
+nyjan controller: RecordsController.cs
+
+setja upp postman
+
+laera um versioning (Troy Hunt)
+
+
+
+
+
+
+
+
+
+
