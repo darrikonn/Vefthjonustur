@@ -73,8 +73,8 @@ namespace WebApplication.Controllers {
         }
 
         // GET: /api/courses/{id}
-        [HttpGet("{id}")]
-        [Route("api/courses/{id:int}", Name="GetCourse")]
+        [HttpGet]
+        [Route("{id:int}", Name="GetCourse")]
         public IActionResult GetCourse(int id) {
             // services
             var courseService = new CourseService(_courses);
@@ -86,8 +86,8 @@ namespace WebApplication.Controllers {
         }
 
         // GET: /api/courses/{id}/students
-        [HttpGet("{id}/students")]
-        [Route("api/courses/{id:int}/students", Name="GetStudentsOfCourse")]
+        [HttpGet]
+        [Route("{id:int}/students", Name="GetStudentsOfCourse")]
         public IActionResult GetStudentsOfCourse(int id) {
             // services
             var courseService = new CourseService(_courses);
@@ -103,7 +103,7 @@ namespace WebApplication.Controllers {
 
 #region POST
         // POST: /api/courses/{id}/students
-        [HttpPost("{id}/students")]
+        [HttpPost("{id}:int/students")]
         public IActionResult AddStudentToCourse(StudentViewModel model, int id) {
             if (!ModelState.IsValid) {
                 return StatusCode(412);
@@ -163,7 +163,7 @@ namespace WebApplication.Controllers {
 
 #region DELETE
         // DELETE: /api/courses/{id}
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}:int")]
         public IActionResult DeleteCourse(int id) {
             // services
             var courseService = new CourseService(_courses);
@@ -184,7 +184,7 @@ namespace WebApplication.Controllers {
 
 #region PUT
         // PUT: /api/courses/{1}
-        [HttpPut("{id}")]
+        [HttpPut("{id}:int")]
         public IActionResult EditCourse(CourseViewModel model, int id) {
             // also checking if StartDate and EndDate have values
             if (!ModelState.IsValid) {
