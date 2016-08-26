@@ -63,7 +63,7 @@ laera um versioning (Troy Hunt)
 I stad thess ad setja [Route("api/courses/24")] a IActionResult, tha get eg notad nafnid sem er sett a controllerinn og baett bara vid:
 [Route("{id}:int")]
 
-
+Ekki nota baedi [HttpGet("{id}")] og [Route("{id}:int")]
 
 
 
