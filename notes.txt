@@ -65,9 +65,23 @@ I stad thess ad setja [Route("api/courses/24")] a IActionResult, tha get eg nota
 
 Ekki nota baedi [HttpGet("{id}")] og [Route("{id}:int")]
 
+Skjala forritid med:
+/// <summary>
+///
+/// </summary>
+fyrir ofan controller og foll
+sja swagger.io
 
+unit testa business logic, i services.
 
+Gogn sem API skilar: -> DTO
+Gogn sem Api tekur inn: -> ViewModel
+Klasar sem mappast vid toflu: -> Entity
 
+Interface er klasi med helling af follum en engri utfaerslu
+Snidugt ad skipta Service upp i Implementation og Interfaces
+
+throw exception fra service og catcha i controller, og returna http status koda thar.
 
 
 
