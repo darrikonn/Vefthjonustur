@@ -16,39 +16,21 @@ namespace WebApplication.Controllers {
 #region Constructor
         public CourseController(ApplicationDbContext context) {
             _courseService = new CourseService(context);
-            _studentService = new StudentService();
+            _studentService = new StudentService(context);
         }
 #endregion
 
 #region GET
         /// <summary>
-        /// GET: /api/courses
-        /// Returns a list containing exactly one element
-        /// </summary>
-        [HttpGet]
-        public IActionResult Courses() {
-            try {
-                var courses = _courseService.
-                    GetCoursesOfSemester(ConstantVariables.CurrentSemester);
-                
-                return Ok(courses);
-            } catch(Exception e) {
-                return StatusCode(500, e);
-            }
-        }
-
-        /// <summary>
         /// GET: /api/courses?semester=20153
-        /// Returns a list containing two elements: T-514-VEFT and T-111-PROG, both taught in
-        /// fall 2015
+        /// Returns a list containing exactly one element. The semester is an optional parameter
         /// </summary>
         [HttpGet]
-        [Route("{semester}:int")]
-        public IActionResult Courses(int semester) {
+        public IActionResult Courses(int? semester) {
             try {
                 var courses = _courseService.
-                    GetCoursesOfSemester(semester);
-
+                    GetCoursesOfSemester(semester ?? ConstantVariables.CurrentSemester);
+                
                 return Ok(courses);
             } catch(Exception e) {
                 return StatusCode(500, e);
@@ -61,11 +43,16 @@ namespace WebApplication.Controllers {
         /// If not found, then return HTTP 404
         /// </summary>
         [HttpGet]
-        [Route("/{id}:int")]
+        [Route("{id}:int")]
         public IActionResult Course(int id) {
             try {
                 var course = _courseService.
                     GetCourseById(id);
+                if (course == null) {
+                    return NotFound();
+                }
+                course.NumberOfStudents = _studentService.
+                    GetStudentsOfCourse(id).Count;
 
                 return Ok(course);
             } catch(Exception e) {
@@ -78,7 +65,7 @@ namespace WebApplication.Controllers {
         /// Returns a list of all students in T-514-VEFT in fall 2015
         /// </summary>
         [HttpGet]
-        [Route("/{id}:int/students")]
+        [Route("{id}:int/students")]
         public IActionResult Students(int id) {
             try {
                 var course = _courseService.
@@ -99,7 +86,7 @@ namespace WebApplication.Controllers {
         /// If course is not found, return HTTP 404
         /// </summary>
         [HttpPut]
-        [Route("/{id}:int")]
+        [Route("{id}:int")]
         public IActionResult Update(int id, CourseViewModel model) {
             try {
                 var course = _courseService.
@@ -118,7 +105,7 @@ namespace WebApplication.Controllers {
         /// Removes the given course. If not found, return HTTP 404.
         /// </summary>
         [HttpDelete]
-        [Route("/{id}:int")]
+        [Route("{id}:int")]
         public IActionResult Delete(int id) {
             try {
                 if (!_courseService.DeleteCourseById(id)) {
@@ -147,7 +134,7 @@ namespace WebApplication.Controllers {
         /// Adds a new student to T-514-VEFT in 20163. The request body contains the student info.
         /// </summary>
         [HttpPost]
-        [Route("/{id}:int/students")]
+        [Route("{id}:int/students")]
         public IActionResult Add(int id, StudentViewModel model) {
             return Ok();
         }

@@ -20,26 +20,32 @@ namespace WebApplication.Services.Implementation {
                           select c).SingleOrDefault();
             return course;
         }
+
+        private string GetNameOfCourse(string courseId) {
+            var courseName = (from t in _db.CourseTemplates
+                              where t.CourseId == courseId
+                              select t.Name).SingleOrDefault();
+            return courseName;
+        }
 #endregion
 
         public List<CourseDTO> GetCoursesOfSemester(int semester) {
             var courses = (from c in _db.Courses
                            where c.Semester == semester
                            select c).ToList();
-            var courseList = new List<CourseDTO>();
-            courses.ForEach(c => courseList.Add(new CourseDTO {
-                    CourseId = c.CourseId
-                })
-            );
-            
-            return courseList;
+
+            return courses.Select(c => new CourseDTO {
+                CourseId = c.CourseId,
+                Name = GetNameOfCourse(c.CourseId)
+            }).ToList();
         }
 
-        public CourseDTO GetCourseById(int id) {
+        public CourseDetailsDTO GetCourseById(int id) {
             var course = GetCourseFromDbById(id);
 
-            return new CourseDTO {
-               CourseId = course.CourseId 
+            return new CourseDetailsDTO {
+                CourseId = course.CourseId, 
+                Name = GetNameOfCourse(course.CourseId)
             };
         }
 

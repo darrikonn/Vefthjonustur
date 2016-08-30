@@ -4,12 +4,7 @@ namespace WebApplication.Models.EntityModels {
 
     public class CourseTemplate {
         [Key]
-        [ForeignKey("Course")]
         public string CourseId { get; set; }
         public string Name { get; set; }
-
-#region ForeignKeys
-        public virtual Course Course { get; set; }
-#endregion
     }
 }

@@ -69,7 +69,7 @@ namespace WebApplication.Helpers {
                 }
 
                 // check if there are any existing links
-                if (!db.CourseStudentLinkers.Any()) {
+                /*if (!db.CourseStudentLinkers.Any()) {
                     db.CourseStudentLinkers.AddRange(
                         new CourseStudentLinker {
                             Id = 1,
@@ -108,7 +108,7 @@ namespace WebApplication.Helpers {
                             SSN = "4567891230"
                         }
                     );
-                }
+                }*/
 
                 db.SaveChanges();
             }
