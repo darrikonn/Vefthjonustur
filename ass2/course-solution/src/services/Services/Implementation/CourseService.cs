@@ -3,8 +3,10 @@ namespace Services.Services.Implementation {
     using System.Collections.Generic;
     using System.Linq;
     using Data;
-    using Models.EntityModels;
+    using Entities.EntityModels;
     using Interface;
+    using Models.Models.ViewModels;
+    using Models.Models.DTO;
 
     public class CourseService : ICourseService {
         private readonly ApplicationDbContext _db;
@@ -13,15 +15,8 @@ namespace Services.Services.Implementation {
             _db = context;
         }
 
-        public List<Course> GetCoursesOfSemester(int semester) {
-            var courses = (from c in _db.Courses
-                           where c.Semester == semester
-                           select c).ToList();
-
-            return courses;
-        }
-
-        public Course GetCourseById(int id) {
+#region PrivateFunctions
+        private Course GetCourseFromDbById(int id) {
             var course = (from c in _db.Courses
                           where c.Id == id
                           select c).SingleOrDefault();
@@ -29,22 +24,40 @@ namespace Services.Services.Implementation {
             return course;
         }
 
-        public string GetNameOfCourse(string courseId) {
+        private string GetNameOfCourse(string courseId) {
             var courseName = (from t in _db.CourseTemplates
                               where t.CourseId == courseId
                               select t.Name).SingleOrDefault();
             return courseName;
         }
+#endregion
 
-        public bool DeleteCourseById(int id) {
-            var course = GetCourseById(id);
+        public List<CourseDTO> GetCoursesOfSemester(int semester) {
+            var courses = (from c in _db.Courses
+                           where c.Semester == semester
+                           select c).ToList();
 
-            _db.Courses.Remove(course);
-            return _db.SaveChanges() > 0; 
+            return courses.Select(c => new CourseDTO {
+                CourseId = c.CourseId,
+                Name = GetNameOfCourse(c.CourseId)
+            }).ToList();
         }
-/*
-        public Course UpdateCourseById(int id, CourseViewModel model) {
-            var course = GetCourseById(id);
+
+        public CourseDetailsDTO GetCourseById(int id) {
+            var course = GetCourseFromDbById(id);
+
+            if (course == null) {
+                return null;
+            }
+
+            return new CourseDetailsDTO {
+                CourseId = course.CourseId, 
+                Name = GetNameOfCourse(course.CourseId)
+            };
+        }
+
+        public CourseDetailsDTO UpdateCourseById(int id, CourseViewModel model) {
+            var course = GetCourseFromDbById(id);
             
             course.StartDate = model.StartDate.Value;
             course.EndDate = model.EndDate.Value;
@@ -55,6 +68,13 @@ namespace Services.Services.Implementation {
                 CourseId = course.CourseId, 
                 Name = GetNameOfCourse(course.CourseId)
             };
+        }
+
+        public bool DeleteCourseById(int id) {
+            var course = GetCourseFromDbById(id);
+
+            _db.Courses.Remove(course);
+            return _db.SaveChanges() > 0; 
         }
 
         public int AddCourse(CourseViewModel model) {
@@ -75,6 +95,6 @@ namespace Services.Services.Implementation {
             _db.SaveChanges();
 
             return id;
-        }*/
+        }
     }
 }

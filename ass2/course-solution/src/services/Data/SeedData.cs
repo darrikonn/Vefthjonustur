@@ -1,7 +1,7 @@
 namespace Services.Data {
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
-    using Models.EntityModels;
+    using Entities.EntityModels;
     using System;
     using System.Linq;
 

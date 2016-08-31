@@ -1,4 +1,4 @@
-namespace Services.Models.EntityModels {
+namespace Services.Entities.EntityModels {
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 

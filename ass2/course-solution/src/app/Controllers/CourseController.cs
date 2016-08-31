@@ -12,14 +12,12 @@ namespace WebApplication.Controllers {
 #region MemberVariables
         private readonly ICourseService _courseService;
         private readonly IStudentService _studentService;
-        private readonly Populator _populator;
 #endregion
 
 #region Constructor
         public CourseController(ApplicationDbContext context) {
             _courseService = new CourseService(context);
             _studentService = new StudentService(context);
-            _populator = new Populator();
         }
 #endregion
 
@@ -36,7 +34,7 @@ namespace WebApplication.Controllers {
         [HttpGet]
         public IActionResult Courses(int? semester) {
             try {
-                var entityCourses = _courseService.
+                var courses = _courseService.
                     GetCoursesOfSemester(semester ?? ConstantVariables.CurrentSemester);
                 
                 return Ok(courses);

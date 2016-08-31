@@ -82,7 +82,8 @@
   },
 
   "buildOptions": {
-    "debugType": "portable"
+    "debugType": "portable",
+    "emitEntryPoint": true
   },
 
   "runtimeOptions": {
