@@ -1,8 +1,7 @@
-namespace WebApplication.Helpers {
+namespace Services.Data {
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
-    using WebApplication.Models.EntityModels;
-    using WebApplication.Data;
+    using Models.EntityModels;
     using System;
     using System.Linq;
 

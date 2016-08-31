@@ -1,22 +1,25 @@
 namespace WebApplication.Controllers {
     using System;
-    using WebApplication.Services.Implementation;
     using WebApplication.Helpers;
     using Microsoft.AspNetCore.Mvc;
-    using WebApplication.Data;
-    using WebApplication.Models.DTO.ViewModels;
+    using Services.Data;
+    using Models.Models.ViewModels;
+    using Services.Services.Implementation;
+    using Services.Services.Interface;
 
     [Route("/api/courses")]
     public class CourseController : Controller {
 #region MemberVariables
-        private readonly CourseService _courseService;
-        private readonly StudentService _studentService;
+        private readonly ICourseService _courseService;
+        private readonly IStudentService _studentService;
+        private readonly Populator _populator;
 #endregion
 
 #region Constructor
         public CourseController(ApplicationDbContext context) {
             _courseService = new CourseService(context);
             _studentService = new StudentService(context);
+            _populator = new Populator();
         }
 #endregion
 
@@ -33,7 +36,7 @@ namespace WebApplication.Controllers {
         [HttpGet]
         public IActionResult Courses(int? semester) {
             try {
-                var courses = _courseService.
+                var entityCourses = _courseService.
                     GetCoursesOfSemester(semester ?? ConstantVariables.CurrentSemester);
                 
                 return Ok(courses);

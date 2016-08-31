@@ -1,21 +1,27 @@
-namespace WebApplication.Services.Implementation {
+namespace Services.Services.Implementation {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using WebApplication.Data;
-    using WebApplication.Models.DTO.DTOs;
-    using WebApplication.Models.EntityModels;
-    using WebApplication.Models.DTO.ViewModels;
+    using Data;
+    using Models.EntityModels;
+    using Interface;
 
-    public class CourseService {
+    public class CourseService : ICourseService {
         private readonly ApplicationDbContext _db;
 
         public CourseService(ApplicationDbContext context) {
             _db = context;
         }
 
-#region PrivateFunctions
-        private Course GetCourseFromDbById(int id) {
+        public List<Course> GetCoursesOfSemester(int semester) {
+            var courses = (from c in _db.Courses
+                           where c.Semester == semester
+                           select c).ToList();
+
+            return courses;
+        }
+
+        public Course GetCourseById(int id) {
             var course = (from c in _db.Courses
                           where c.Id == id
                           select c).SingleOrDefault();
@@ -23,40 +29,22 @@ namespace WebApplication.Services.Implementation {
             return course;
         }
 
-        private string GetNameOfCourse(string courseId) {
+        public string GetNameOfCourse(string courseId) {
             var courseName = (from t in _db.CourseTemplates
                               where t.CourseId == courseId
                               select t.Name).SingleOrDefault();
             return courseName;
         }
-#endregion
 
-        public List<CourseDTO> GetCoursesOfSemester(int semester) {
-            var courses = (from c in _db.Courses
-                           where c.Semester == semester
-                           select c).ToList();
+        public bool DeleteCourseById(int id) {
+            var course = GetCourseById(id);
 
-            return courses.Select(c => new CourseDTO {
-                CourseId = c.CourseId,
-                Name = GetNameOfCourse(c.CourseId)
-            }).ToList();
+            _db.Courses.Remove(course);
+            return _db.SaveChanges() > 0; 
         }
-
-        public CourseDetailsDTO GetCourseById(int id) {
-            var course = GetCourseFromDbById(id);
-
-            if (course == null) {
-                return null;
-            }
-
-            return new CourseDetailsDTO {
-                CourseId = course.CourseId, 
-                Name = GetNameOfCourse(course.CourseId)
-            };
-        }
-
-        public CourseDetailsDTO UpdateCourseById(int id, CourseViewModel model) {
-            var course = GetCourseFromDbById(id);
+/*
+        public Course UpdateCourseById(int id, CourseViewModel model) {
+            var course = GetCourseById(id);
             
             course.StartDate = model.StartDate.Value;
             course.EndDate = model.EndDate.Value;
@@ -67,13 +55,6 @@ namespace WebApplication.Services.Implementation {
                 CourseId = course.CourseId, 
                 Name = GetNameOfCourse(course.CourseId)
             };
-        }
-
-        public bool DeleteCourseById(int id) {
-            var course = GetCourseFromDbById(id);
-
-            _db.Courses.Remove(course);
-            return _db.SaveChanges() > 0; 
         }
 
         public int AddCourse(CourseViewModel model) {
@@ -94,6 +75,6 @@ namespace WebApplication.Services.Implementation {
             _db.SaveChanges();
 
             return id;
-        }
+        }*/
     }
 }

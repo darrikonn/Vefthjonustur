@@ -1,9 +1,8 @@
-namespace WebApplication.Data {
+namespace Services.Data {
     using System;
     using System.Collections.Generic;
     using Microsoft.EntityFrameworkCore;
-    using WebApplication.Models.EntityModels;
-    using WebApplication.Helpers;
+    using Models.EntityModels;
 
     public class ApplicationDbContext : DbContext {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 

@@ -1,4 +1,4 @@
-namespace WebApplication.Models.DTO.ViewModels {
+namespace Models.Models.ViewModels {
     using System;
     using System.ComponentModel.DataAnnotations;
 

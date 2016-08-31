@@ -1,10 +1,9 @@
-namespace WebApplication.Models.DTO.ViewModels {
+namespace Services.Models.EntityModels {
     using System.ComponentModel.DataAnnotations;
 
-    public class StudentViewModel {
-        [Required]
+    public class Student {
+        [Key]
         public string SSN { get; set; }
-        [Required]
         public string Name { get; set; }
     }
 }

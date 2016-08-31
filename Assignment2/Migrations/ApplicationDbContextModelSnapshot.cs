@@ -39,9 +39,11 @@ namespace Assignment2.Migrations
 
                     b.Property<string>("SSN");
 
-                    b.HasKey("Id");
+                    b.Property<int?>("CourseId");
 
-                    b.HasIndex("Id");
+                    b.HasKey("Id", "SSN");
+
+                    b.HasIndex("CourseId");
 
                     b.HasIndex("SSN");
 
@@ -74,12 +76,12 @@ namespace Assignment2.Migrations
                 {
                     b.HasOne("WebApplication.Models.EntityModels.Course", "Course")
                         .WithMany()
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CourseId");
 
                     b.HasOne("WebApplication.Models.EntityModels.Student", "Student")
                         .WithMany()
-                        .HasForeignKey("SSN");
+                        .HasForeignKey("SSN")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
         }
     }
