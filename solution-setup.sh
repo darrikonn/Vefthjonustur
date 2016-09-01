@@ -1,7 +1,7 @@
 #!/bin/bash
 mkdir $1-solution
 cd $1-solution
-mkdir -p src/app src/models src/services test/test-library
+mkdir -p src/API src/Models src/Services src/Entities test/test-library
 touch global.json
 cat << EOT >> global.json
 {
@@ -15,15 +15,19 @@ cd test/test-library
 dotnet new -t xunittest
 dotnet restore
 dotnet build
-cd ../../src/app
+cd ../../src/API
 dotnet new -t Web
 dotnet restore
 dotnet build
-cd ../models
+cd ../Models
 dotnet new -t lib
 dotnet restore
 dotnet build
-cd ../services
+cd ../Services
+dotnet new -t lib
+dotnet restore
+dotnet build
+cd ../Entities
 dotnet new -t lib
 dotnet restore
 dotnet build
