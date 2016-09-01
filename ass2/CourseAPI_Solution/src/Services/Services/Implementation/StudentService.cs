@@ -1,0 +1,43 @@
+namespace CourseAPI.Services.Services.Implementation {
+    using System.Linq;
+    using System.Collections.Generic;
+    using CourseAPI.Services.Data;
+    using CourseAPI.Services.Entities.EntityModels;
+    using CourseAPI.Services.Services.Interface;
+    using CourseAPI.Models.ViewModels;
+    using CourseAPI.Models.DTO;
+
+    /// <summary>
+    /// This class implements the functions that the IStudentService interface specifies.
+    /// This class is internal so it doesn't need XML documentation.
+    /// </summary>
+    public class StudentService : IStudentService {
+        private readonly ApplicationDbContext _db;
+
+        public StudentService(ApplicationDbContext context) {
+            _db = context;
+        }
+
+        public List<StudentDTO> GetStudentsOfCourse(int id) {
+            var students = (from s in _db.Students
+                            join l in _db.CourseStudentLinkers on s.SSN equals l.SSN
+                            where l.Id == id
+                            select s).ToList();
+
+            return students.Select(s => new StudentDTO {
+                SSN = s.SSN,
+                Name = s.Name
+            }).ToList();
+        }
+
+        public List<StudentDTO> AddStudentToCourse(int id, LinkerViewModel model) {
+            _db.CourseStudentLinkers.Add(new CourseStudentLinker {
+                SSN = model.SSN,
+                Id = id
+            });
+            _db.SaveChanges();
+
+            return GetStudentsOfCourse(id);
+        }
+    }
+}
