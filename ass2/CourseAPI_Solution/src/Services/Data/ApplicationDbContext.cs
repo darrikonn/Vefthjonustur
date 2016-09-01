@@ -8,11 +8,6 @@ namespace CourseAPI.Services.Data {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
             : base(options) {}
 
-        public ApplicationDbContext() {
-            Create();
-            
-        }
-
         public DbSet<Course> Courses { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<CourseTemplate> CourseTemplates { get; set; }
@@ -24,12 +19,6 @@ namespace CourseAPI.Services.Data {
             // using fluent API for double key attributes in a single table
             builder.Entity<CourseStudentLinker>()
                 .HasKey(c => new {c.Id, c.SSN});
-        }
-
-        public ApplicationDbContext Create() {
-            var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            builder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=pinchdb;Trusted_Connection=True;MultipleActiveResultSets=true");
-            return new ApplicationDbContext(builder.Options);
         }
     }
 }

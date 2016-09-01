@@ -4,8 +4,8 @@ namespace CourseAPI.API.Controllers {
     using Microsoft.AspNetCore.Mvc;
     using Services.Data;
     using CourseAPI.Models.ViewModels;
-    using CourseAPI.Services.Services.Implementation;
     using CourseAPI.Services.Services.Interface;
+    //using CourseAPI.Services.Services.Implementation;
 
     /// <summary>
     /// CourseAPI controller that acts as a REST service. See controllers methods on how to use.
@@ -18,9 +18,10 @@ namespace CourseAPI.API.Controllers {
 #endregion
 
 #region Constructor
-        public CourseController(ApplicationDbContext context) {
-            _courseService = new CourseService(context);
-            _studentService = new StudentService(context);
+        // using dependency injection
+        public CourseController(ICourseService ics, IStudentService iss) {
+            _courseService = ics;
+            _studentService = iss;
         }
 #endregion
 
@@ -35,7 +36,7 @@ namespace CourseAPI.API.Controllers {
         /// If no semester is specified, than the default semester will be used: 2016 fall.
         /// </summary>
         [HttpGet]
-        public IActionResult Courses(int? semester) {
+        public IActionResult Courses(int? semester = null) {
             try {
                 var courses = _courseService.
                     GetCoursesOfSemester(semester ?? ConstantVariables.CurrentSemester);
