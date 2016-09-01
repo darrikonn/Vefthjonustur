@@ -1,0 +1,45 @@
+{
+  "dependencies": {
+    "Microsoft.NETCore.App": {
+      "version": "1.0.0",
+      "type": "platform"
+    },
+    "Microsoft.EntityFrameworkCore.Sqlite": "1.0.0",
+    "Microsoft.EntityFrameworkCore.Design": {
+      "version": "1.0.0-preview2-final",
+      "type": "build"
+    },
+    "Models": {
+      "authors": "Darri Steinn Konradsson",
+      "target": "project" 
+    },
+    "Entities": {
+      "authors": "Darri Steinn Konradsson",
+      "target": "project" 
+    }
+  },
+
+  "tools": {
+    "Microsoft.EntityFrameworkCore.Tools": {
+      "version": "1.0.0-preview2-final"
+    }
+  },
+
+  "frameworks": {
+    "netcoreapp1.0": {
+      "imports": [
+        "dotnet5.6",
+        "dnxcore50",
+        "portable-net45+win8"
+      ]
+    }
+  },
+
+  "buildOptions": {
+    "debugType": "portable"
+  },
+
+  "tooling": {
+    "defaultNamespace": "CourseAPI.Services"
+  }
+}
