@@ -29,6 +29,6 @@
   },
 
   "tooling": {
-    "defaultNamespace": "CourseAPI.Services"
+    "defaultNamespace": "API.Services"
   }
 }

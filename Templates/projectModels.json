@@ -3,14 +3,6 @@
     "Microsoft.NETCore.App": {
       "version": "1.0.0",
       "type": "platform"
-    },
-    "Models": {
-      "authors": "Darri Steinn Konradsson",
-      "target": "project" 
-    },
-    "Entities": {
-      "authors": "Darri Steinn Konradsson",
-      "target": "project" 
     }
   },
 
@@ -29,6 +21,6 @@
   },
 
   "tooling": {
-    "defaultNamespace": "CourseAPI.Services"
+    "defaultNamespace": "API.Models"
   }
 }
