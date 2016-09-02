@@ -1,4 +1,4 @@
-namespace CourseAPI.Services.Data {
+namespace CourseAPI.Entities.Data {
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using CourseAPI.Entities.Models;

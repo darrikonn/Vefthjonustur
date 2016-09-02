@@ -10,9 +10,9 @@ namespace CourseAPI.API {
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using CourseAPI.Services.Data;
-    using CourseAPI.Services.Services.Implementation;
-    using CourseAPI.Services.Services.Interface;
+    using CourseAPI.Entities.Data;
+    using CourseAPI.Services.Implementation;
+    using CourseAPI.Services.Interface;
 
     public class Startup {
         private string _rootFolder;

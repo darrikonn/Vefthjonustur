@@ -1,4 +1,4 @@
-namespace CourseAPI.Services.Services.Interface {
+namespace CourseAPI.Services.Interface {
     using System.Collections.Generic;
     using CourseAPI.Models.ViewModels;
     using CourseAPI.Models.DTO;

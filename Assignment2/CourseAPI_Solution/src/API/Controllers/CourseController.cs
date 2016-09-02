@@ -2,10 +2,8 @@ namespace CourseAPI.API.Controllers {
     using System;
     using CourseAPI.API.Helpers;
     using Microsoft.AspNetCore.Mvc;
-    using Services.Data;
     using CourseAPI.Models.ViewModels;
-    using CourseAPI.Services.Services.Interface;
-    using CourseAPI.Services.Services.Implementation;
+    using CourseAPI.Services.Interface;
 
     /// <summary>
     /// CourseAPI controller that acts as a REST service. See controllers methods on how to use.

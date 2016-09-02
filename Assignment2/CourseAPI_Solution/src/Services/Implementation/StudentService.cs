@@ -1,9 +1,9 @@
-namespace CourseAPI.Services.Services.Implementation {
+namespace CourseAPI.Services.Implementation {
     using System.Linq;
     using System.Collections.Generic;
-    using CourseAPI.Services.Data;
+    using CourseAPI.Entities.Data;
     using CourseAPI.Entities.Models;
-    using CourseAPI.Services.Services.Interface;
+    using CourseAPI.Services.Interface;
     using CourseAPI.Models.ViewModels;
     using CourseAPI.Models.DTO;
 

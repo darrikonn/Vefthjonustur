@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Services.Migrations
+namespace Entities.Data.Migrations
 {
     public partial class Initial : Migration
     {

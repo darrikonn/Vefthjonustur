@@ -1,4 +1,4 @@
-namespace CourseAPI.Services.Data {
+namespace CourseAPI.Entities.Data {
     using System;
     using System.Collections.Generic;
     using Microsoft.EntityFrameworkCore;
