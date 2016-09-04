@@ -32,21 +32,21 @@ dotnet build
 cd ../Models
 dotnet new -t lib
 rm Library.cs
+cp ../../../Templates/projectModels.json project.json
 dotnet restore
 dotnet build
-cp ../../../Templates/projectModels.json project.json
 
 cd ../Services
 dotnet new -t lib
 rm Library.cs
+cp ../../../Templates/projectServices.json project.json
 dotnet restore
 dotnet build
-cp ../../../Templates/projectServices.json project.json
 
 cd ../Entities
 dotnet new -t lib
 rm Library.cs
-dotnet restore
-dotnet build
 cp ../../../Scripts/setup-database.sh .
 cp ../../../Templates/projectEntities.json project.json
+dotnet restore
+dotnet build
