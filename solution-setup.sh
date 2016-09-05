@@ -7,7 +7,7 @@ fi
 
 mkdir $1-solution
 cd $1-solution
-mkdir -p src/API src/Models src/Services/Itf src/Services/Imp src/Entities/Models/DTOModels src/Entities/Models/ViewModels src/Entities/Data test/Test-Library
+mkdir -p src/API src/Models/ViewModels src/Models/DTOModels src/Services/Itf src/Services/Imp src/Services/Exceptions src/Entities/Models src/Entities/Data test/Test-Library
 touch global.json
 cat << EOT >> global.json
 {

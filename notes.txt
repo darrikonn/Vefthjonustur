@@ -84,4 +84,35 @@ Snidugt ad skipta Service upp i Implementation og Interfaces
 throw exception fra service og catcha i controller, og returna http status koda thar.
 
 
+nyja moppu i services sem heitir Exceptions og inni i Exception ad bua til:
+AppObjectNotFoundException()
+using System;
+public class AppObjectNotFoundException : ApplicationException { // eda Exception
+    
+}
+
+og i service er tha
+throw new AppObjectNotFoundException(message);
+
+var course = _db.Courses
+            .Select(x => new CourseDetailsDTO {})
+            .SingleOrDefault(x => x.Name == name);
+
+
+left outer join tekur null fyrirbaeri med i linq
+inner join = join t in ttt on t.id equals id
+left outer join = joint t in ttt where t.id equals into typpi
+
+setja [ForeignKey("")] fyrir ofan virtual i entity
+
+
+
+
+
+
+
+
+
+
+
 
