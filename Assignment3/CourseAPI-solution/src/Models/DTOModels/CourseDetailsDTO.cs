@@ -17,5 +17,12 @@ namespace CourseAPI.Models.DTOModels {
         ///     1) 10
         /// </summary>
         public int MaxStudents { get; set; }
+
+        /// <summary>
+        /// Construct an empty list in the constructor.
+        /// </summary>
+        public CourseDetailsDTO() {
+            Students = new List<StudentDTO>();
+        }
     }
 }

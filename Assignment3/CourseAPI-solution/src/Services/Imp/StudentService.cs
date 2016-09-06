@@ -20,13 +20,19 @@ namespace CourseAPI.Services.Imp {
         }
 
 #region PrivateFunctions
-        private void ValidateUser(string ssn) {
+        private Student GetStudentBySSN(string ssn) {
             var student = (from s in _db.Students
                            where s.SSN == ssn
                            select s).SingleOrDefault();
 
+            return student;
+        }
+
+        private void ValidateUser(string ssn) {
+            var student = GetStudentBySSN(ssn);
+
             if (student == null) {
-                throw new CustomObjectNotFoundException("Student not found!");
+                throw new CustomObjectNotFoundException("Student not found!\n");
             }
         }
 
@@ -48,19 +54,11 @@ namespace CourseAPI.Services.Imp {
             return link;
         }
 
-        private void ValidateCSLink(int id, string ssn) {
-            var link = GetCourseStudentLink(id, ssn);
-
-            if (link != null) {
-                throw new CustomConflictException("Link already exists!");
-            }
-        }
-
         private void ValidateWLLink(int id, string ssn) {
             var link = GetWaitingListLink(id, ssn);
 
             if (link != null) {
-                throw new CustomConflictException("Link already exists!");
+                throw new CustomConflictException("Person already on waiting list!\n");
             }
         }
 
@@ -84,28 +82,38 @@ namespace CourseAPI.Services.Imp {
             }).ToList();
         }
 
-        public List<StudentDTO> AddStudentToCourse(int id, LinkerViewModel model, int capacity) {
-            ValidateUser(model.SSN);
-            ValidateCSLink(id, model.SSN);
-
-            if (GetStudentsEntitiesOfCourse(id).Count + 1 >= capacity) {
-                throw new CustomForbiddenException("Capacity of course reached");
+        public StudentDTO AddStudentToCourse(int id, LinkerViewModel model, int capacity) {
+            var student = GetStudentBySSN(model.SSN);
+            if (student == null) {
+                throw new CustomObjectNotFoundException("Student not found!\n");
             }
 
-            _db.CourseStudentLinkers.Add(new CourseStudentLinker {
-                SSN = model.SSN,
-                Id = id
-            });
+            if (GetStudentsEntitiesOfCourse(id).Count >= capacity) {
+                throw new CustomForbiddenException("Max students reached\n");
+            }
+
+            var csLink = GetCourseStudentLink(id, model.SSN);
+            if (csLink != null) {
+                csLink.IsActive = true;
+            } else {
+                _db.CourseStudentLinkers.Add(new CourseStudentLinker {
+                    SSN = model.SSN,
+                    Id = id
+                });
+            }
+
             _db.SaveChanges();
 
             // remove from waiting list
-            var link = GetWaitingListLink(id, model.SSN);
-            if (link != null) {
-                _db.WaitingListLinkers.Remove(link);
+            var wlLink = GetWaitingListLink(id, model.SSN);
+            if (wlLink != null) {
+                _db.WaitingListLinkers.Remove(wlLink);
                 _db.SaveChanges();
             }
 
-            return GetStudentsOfCourse(id);
+            return new StudentDTO {
+                Name = student.Name   
+            };
         }
 
         public List<StudentDTO> GetStudentsOfCourseWaitingList(int id) {
@@ -120,23 +128,36 @@ namespace CourseAPI.Services.Imp {
             }).ToList();
         }
 
-        public List<StudentDTO> AddStudentToCourseWaitingList(int id, LinkerViewModel model) {
-            ValidateUser(model.SSN);
+        public StudentDTO AddStudentToCourseWaitingList(int id, LinkerViewModel model) {
+            var student = GetStudentBySSN(model.SSN);
+            if (student == null) {
+                throw new CustomObjectNotFoundException("Student not found!\n");
+            }
+
             ValidateWLLink(id, model.SSN);
 
-            _db.CourseStudentLinkers.Add(new CourseStudentLinker {
+            var csLink = GetCourseStudentLink(id, model.SSN);
+            if (csLink != null) {
+                throw new CustomForbiddenException($"{student.Name} is already enrolled as a student\n");
+            }
+
+            _db.WaitingListLinkers.Add(new WaitingListLinker {
                 SSN = model.SSN,
                 Id = id
             });
             _db.SaveChanges();
 
-            return GetStudentsOfCourseWaitingList(id);
+            return new StudentDTO {
+                Name = student.Name   
+            };
         }
 
         public bool DeleteStudentFromCourse(int id, LinkerViewModel model) {
+            ValidateUser(model.SSN);
+
             var link = GetCourseStudentLink(id, model.SSN);
             if (link == null) {
-                throw new CustomObjectNotFoundException("Not found maaan!");
+                throw new CustomObjectNotFoundException("Student does not exist in this course!\n");
             }
 
             link.IsActive = false;

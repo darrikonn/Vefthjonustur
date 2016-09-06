@@ -1,5 +1,6 @@
 namespace CourseAPI.API.Controllers {
     using System;
+    using System.Linq;
     using CourseAPI.API.Helpers;
     using Microsoft.AspNetCore.Mvc;
     using CourseAPI.Models.ViewModels;
@@ -49,7 +50,7 @@ namespace CourseAPI.API.Controllers {
                 
                 return Ok(courses);
             } catch(Exception e) {
-                return StatusCode(500, e);
+                return StatusCode(500, e.Message);
             }
         }
 
@@ -74,10 +75,10 @@ namespace CourseAPI.API.Controllers {
                     GetStudentsOfCourse(id);
 
                 return Ok(course);
-            } catch(CustomObjectNotFoundException) {
-                return NotFound();
+            } catch(CustomObjectNotFoundException e) {
+                return NotFound(e.Message);
             } catch(Exception e) {
-                return StatusCode(500, e);
+                return StatusCode(500, e.Message);
             }
         }
 
@@ -100,16 +101,22 @@ namespace CourseAPI.API.Controllers {
 
                 return Ok(_studentService
                     .GetStudentsOfCourse(id));
-            } catch(CustomObjectNotFoundException) {
-                return NotFound();
+            } catch(CustomObjectNotFoundException e) {
+                return NotFound(e.Message);
             } catch(Exception e) {
-                return StatusCode(500, e);
+                return StatusCode(500, e.Message);
             }
         }
         
         /// <summary>
+        /// GET: /api/courses/{id}/waitinglist
+        /// Examples:
+        ///     1) <hostname>/api/courses/1/waitinglist
+        ///     2) curl -i -X GET <hostname>/api/courses/1/waitinglist
         /// </summary>
         /// <returns>
+        /// Returns a list of all students (StudentDTO) in the waiting list of a course.
+        /// If course is not found, then return HTTP 404.
         /// </returns>
         [HttpGet]
         [Route("{id:int}/waitinglist", Name="GetCourseWaitingList")]
@@ -119,11 +126,11 @@ namespace CourseAPI.API.Controllers {
                     .GetCourseById(id);
 
                 return Ok(_studentService
-                    .GetStudentsOfCourse(id));
-            } catch(CustomObjectNotFoundException) {
-                return NotFound();
+                    .GetStudentsOfCourseWaitingList(id));
+            } catch(CustomObjectNotFoundException e) {
+                return NotFound(e.Message);
             } catch(Exception e) {
-                return StatusCode(500, e);
+                return StatusCode(500, e.Message);
             }
         }
 #endregion
@@ -132,10 +139,10 @@ namespace CourseAPI.API.Controllers {
         /// <summary>
         /// PUT: /api/courses/{id}
         /// Examples:
-        ///     1) curl -i -X PUT -d "CourseId=T-500-ERR"&Semester=20153" <hostname>/api/courses/1
+        ///     1) curl -i -X PUT -d "CourseId=T-500-ERR"&Semester=20153&MaxStudents=4" <hostname>/api/courses/1
         /// Allows the client of the API to modify the given course instance.
         /// Mutable objects are StartDate and EndDate.
-        /// Immutable objects are CourseId and Semester.
+        /// Immutable objects are CourseId, MaxStudents and Semester.
         /// </summary>
         /// <returns>
         /// Returns the updated course (CourseDetailsDTO).
@@ -147,7 +154,10 @@ namespace CourseAPI.API.Controllers {
         public IActionResult Update(int id, CourseViewModel model) {
             // validate model
             if (!ModelState.IsValid) {
-                return StatusCode(412);
+                var errors = ModelState.Select(x => x.Value.Errors)
+                           .Where(y=>y.Count>0)
+                           .ToList();
+                return StatusCode(412, errors);
             }
 
             try {
@@ -158,10 +168,10 @@ namespace CourseAPI.API.Controllers {
                     GetStudentsOfCourse(id);
 
                 return Ok(course);
-            } catch(CustomObjectNotFoundException) {
-                return NotFound();
+            } catch(CustomObjectNotFoundException e) {
+                return NotFound(e.Message);
             } catch(Exception e) {
-                return StatusCode(500, e);
+                return StatusCode(500, e.Message);
             }
         }
 #endregion
@@ -186,17 +196,37 @@ namespace CourseAPI.API.Controllers {
                 }
                 
                 return NoContent();
-            } catch(CustomObjectNotFoundException) {
-                return NotFound();
+            } catch(CustomObjectNotFoundException e) {
+                return NotFound(e.Message);
             } catch(Exception e) {
-                return StatusCode(500, e);
+                return StatusCode(500, e.Message);
             }
         }
 
+        /// <summary>
+        /// DELETE: /api/courses/{id}/students
+        /// Examples:
+        ///     1) curl -i -d "SSN=1234567890" -X DELETE <hostname>/api/courses/1/students
+        /// Removes a student from a given course.
+        /// </summary>
+        /// <returns>
+        /// Returns no content if deletion was successful.
+        /// If course or student were not found, return HTTP 404.
+        /// </returns>
         [HttpDelete]
         [Route("{id:int}/students")]
         public IActionResult Delete(int id, LinkerViewModel model) {
-            return null;
+            try {
+                if (!_studentService.DeleteStudentFromCourse(id, model)) {
+                    throw new Exception();
+                }
+                
+                return NoContent();
+            } catch(CustomObjectNotFoundException e) {
+                return NotFound(e.Message);
+            } catch(Exception e) {
+                return StatusCode(500, e.Message);
+            }
         }
 #endregion
 
@@ -204,10 +234,10 @@ namespace CourseAPI.API.Controllers {
         /// <summary>
         /// POST: /api/courses
         /// Examples:
-        ///     1) curl -i -X -d "CourseId=T-500-ERR&Semester=20153" POST <hostname>/api/courses
+        ///     1) curl -i -X -d "CourseId=T-500-ERR&Semester=20153&MaxStudents=10" POST <hostname>/api/courses
         /// Adds a new course to the database.
         /// Mutable objects are StartDate and EndDate.
-        /// Immutable objects are CourseId and Semester.
+        /// Immutable objects are CourseId, Semester and MaxStudents.
         /// </summary>
         /// <returns>
         /// Returns the newly added course (CourseDetailsDTO) with status code 201.
@@ -215,7 +245,10 @@ namespace CourseAPI.API.Controllers {
         [HttpPost]
         public IActionResult Add(CourseViewModel model) {
             if (!ModelState.IsValid) {
-                return StatusCode(412);
+                var errors = ModelState.Select(x => x.Value.Errors)
+                           .Where(y=>y.Count>0)
+                           .ToList();
+                return StatusCode(412, errors);
             }
 
             try {
@@ -223,20 +256,22 @@ namespace CourseAPI.API.Controllers {
 
                 return Created(Url.Link("GetCourse", new { id }), 
                         _courseService.GetCourseById(id));
+            } catch(CustomObjectNotFoundException e) {
+                return NotFound(e.Message);
             } catch(Exception e) {
-                return StatusCode(500, e);
+                return StatusCode(500, e.Message);
             }
         }
 
         /// <summary>
         /// POST: /api/courses/{id}/students
         /// Examples:
-        ///     1) curl -i -X -d "SSN=1501933119&Id=1" POST <hostname>/api/courses
+        ///     1) curl -i -X -d "SSN=1501933119" POST <hostname>/api/courses/1/students
         /// Adds a new student to a given course. The request body contains the student info.
-        /// Immutable objects are SSN and Id (the Id of the course).
+        /// SSN is an immutable object.
         /// </summary>
         /// <returns>
-        /// Returns the list of all students with status code 201 if successful.
+        /// Returns the student name and a message; with status code 201 if successful.
         /// If course was not found, return HTTP 404.
         /// If model state is invalid, return HTTP 412.
         /// </returns>
@@ -244,7 +279,10 @@ namespace CourseAPI.API.Controllers {
         [Route("{id:int}/students")]
         public IActionResult StudentAdd(int id, LinkerViewModel model) {
             if (!ModelState.IsValid) {
-                return StatusCode(412);
+                var errors = ModelState.Select(x => x.Value.Errors)
+                           .Where(y=>y.Count>0)
+                           .ToList();
+                return StatusCode(412, errors);
             }
 
             try {
@@ -252,41 +290,61 @@ namespace CourseAPI.API.Controllers {
 
                 var student = _studentService.AddStudentToCourse(id, model, course.MaxStudents);
 
-                return Created(Url.Link("GetStudentsOfCourse", new { id }), student); 
-            } catch(CustomObjectNotFoundException) {
-                return NotFound();
+                return Created(Url.Link("GetStudentsOfCourse", new { id }), 
+                        $"{student.Name} is now enrolled in the course\n"); 
+            } catch(CustomObjectNotFoundException e) {
+                return NotFound(e.Message);
             } catch(CustomConflictException e) {
-                return StatusCode(409, e);
+                return StatusCode(412, e.Message);
+                //return StatusCode(409, e.Message);
             } catch(CustomForbiddenException e) {
-                return StatusCode(403, e);
+                return StatusCode(412, e.Message);
+                //return StatusCode(403, e.Message);
             } catch(Exception e) {
-                return StatusCode(500, e);
+                return StatusCode(500, e.Message);
             }
         }
 
         /// <summary>
+        /// POST: /api/courses/{id}/waitinglist
+        /// Examples:
+        ///     1) curl -i -X -d "SSN=1501933119" POST <hostname>/api/courses/1/waitinglist
+        /// Adds a new student to the waiting list of a  given course. 
+        /// The request body contains the student info.
+        /// SSN is an immutable object
         /// </summary>
         /// <returns>
+        /// Returns the student name + message; with status code 200 if successful.
+        /// If course or student were not found, return HTTP 404.
+        /// If model state is invalid, return HTTP 412.
         /// </returns>
         [HttpPost]
         [Route("{id:int}/waitinglist")]
         public IActionResult WaitingListAdd(int id, LinkerViewModel model) {
             if (!ModelState.IsValid) {
-                return StatusCode(412);
+                var errors = ModelState.Select(x => x.Value.Errors)
+                           .Where(y=>y.Count>0)
+                           .ToList();
+                return StatusCode(412, errors);
             }
 
             try {
                 var course = _courseService.GetCourseById(id);
 
                 var student = _studentService.AddStudentToCourseWaitingList(id, model);
-
-                return Created(Url.Link("GetCourseWaitingList", new { id }), student); 
+                
+                return Ok($"{student.Name} is now registered on the waiting list\n");
+                // return Created(Url.Link("GetCourseWaitingList", new { id }), student); 
             } catch(CustomObjectNotFoundException e) {
-                return NotFound(e);
+                return NotFound(e.Message);
             } catch(CustomConflictException e) {
-                return StatusCode(409, e);
+                //return StatusCode(409, e.Message);
+                return StatusCode(412, e.Message);
+            } catch(CustomForbiddenException e) {
+                return StatusCode(412, e.Message);
+                //return StatusCode(403, e.Message);
             } catch(Exception e) {
-                return StatusCode(500, e);
+                return StatusCode(500, e.Message);
             }
         }
 #endregion

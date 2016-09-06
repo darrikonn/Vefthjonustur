@@ -8,7 +8,7 @@ using CourseAPI.Entities.Data;
 namespace Entities.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20160905220046_Initial")]
+    [Migration("20160906120826_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

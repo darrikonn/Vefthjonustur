@@ -14,7 +14,7 @@ namespace CourseAPI.Models.ViewModels {
         ///     1) T-514-VEFT
         /// </summary>
         [Required]
-        public string CourseId { get; set; }
+        public string TemplateId { get; set; }
 
         /// <summary>
         /// The semester when this course is tought. 

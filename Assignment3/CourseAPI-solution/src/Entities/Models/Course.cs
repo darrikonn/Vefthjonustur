@@ -55,6 +55,9 @@ namespace CourseAPI.Entities.Models {
         public DateTime EndDate { get; set; }
 
 #region ForeignKey
+        /// <summary>
+        /// The foreign key to the Course Template table
+        /// </summary>
         [ForeignKey("CourseId")]
         public virtual CourseTemplate CourseTemplate { get; set; }
 #endregion

@@ -1,30 +1,60 @@
-# Assignment 2
-The second assignment is to design and create a REST service using .NET Core and ASP.NET Web API. It should model courses and their students.<br/>
+# Assignment 3
+The third assignment is to design and create a REST service using .NET Core and ASP.NET Web API. It should model courses and their students.<br/>
 **NOTE**: I set the current semester to 20163 instead of 20153. Keep that in mind :).
 
 ## Operations
 It should support the following operations:
 
-### Get a list of courses
-> curl -i -X GET localhost:5000/api/courses
+### 1. POST /api/courses
+> curl -i -X POST -d "TemplateID=T-514-VEFT&StartDate=20160818T00:00:00&EndDate=2016-11-10T00:00:00&Semester=20163&MaxStudents=4" localhost:5000/api/courses
 
-### Get a list of courses by semester
-> curl -i -X GET -d "semester=20153" localhost:5000/api/courses
+### 2. POST /api/courses/{ID}/students 
+> curl -X POST -i -d "SSN=9876543210" localhost:5000/api/courses/1/students
 
-### Get more detail of a course with a given ID
-> curl -i -X GET localhost:5000/api/courses/0
+### 3. POST /api/courses/{ID}/students
+> curl -X POST -i -d "SSN=1234567890" localhost:5000/api/courses/1/students
 
-### Update a course
-> curl -i -d "CourseId=T-500-APIC&Semester=20163&StartDate=2016-11-22&EndDate=2016-12-22" -X PUT localhost:5000/api/courses/0
+### 4. POST /api/courses/{ID}/students 
+> curl -X POST -i -d "SSN=1234567890" localhost:5000/api/courses/1/students
 
-### Add a course 
-> curl -i -d "CourseId=T-500-APIC&Semester=20163&StartDate=2016-11-22&EndDate=2016-12-22" -X POST localhost:5000/api/courses
+### 5. POST /api/courses/{ID}/students
+> curl -X POST -i -d "SSN=1234567891" localhost:5000/api/courses/1/students
 
-### Delete a course 
-> curl -i -X DELETE localhost:5000/api/courses/1
+### 6. POST /api/courses/{ID}/students
+> curl -X POST -i -d "SSN=1234567892" localhost:5000/api/courses/1/students
 
-### Get a list of students in a course
-> curl -i -X GET localhost:5000/api/courses/0/students
+### 7. POST /api/courses/{ID}/students
+> curl -X POST -i -d "SSN=1234567893" localhost:5000/api/courses/1/students
 
-### Add a student to a course
-> curl -i -X POST -d "SSN=1501933119&Id=0" localhost:5000/api/courses/0/students
+### 8. POST /api/courses/{ID}/students
+> curl -X POST -i -d "SSN=1234567894" localhost:5000/api/courses/1/students
+
+### 9. DELETE /api/courses/{ID}/students/1234567890
+> curl -X DELETE -i -d "SSN=1234567890" localhost:5000/api/courses/1/students
+
+### 10. GET /api/courses/{ID}/students
+> curl -X GET -i localhost:5000/api/courses/1/students
+
+### 11. POST /api/courses/{ID}/waitinglist
+> curl -X POST -i -d "SSN=9876543210" localhost:5000/api/courses/1/waitinglist
+
+### 12. POST /api/courses/{ID}/waitinglist
+> curl -X POST -i -d "SSN=1234567890" localhost:5000/api/courses/1/waitinglist
+
+### 13. GET /api/courses/{ID}/waitinglist
+> curl -X GET -i localhost:5000/api/courses/1/waitinglist
+
+### 14. POST /api/courses/{ID}/students 
+> curl -X POST -i -d "SSN=1234567890" localhost:5000/api/courses/1/students
+
+### 15. GET /api/courses/{ID}/waitinglist
+> curl -X GET -i localhost:5000/api/courses/1/waitinglist
+
+### 16. POST /api/courses/{ID}/waitinglist
+> curl -X POST -i -d "SSN=1234567895" localhost:5000/api/courses/1/waitinglist
+
+### 17. POST /api/courses/{ID}/waitinglist
+> curl -X POST -i -d "SSN=1234567895" localhost:5000/api/courses/1/waitinglist
+
+### 18. POST /api/courses/{ID}/waitinglist
+> curl -X POST -i -d "SSN=1234567891" localhost:5000/api/courses/1/waitinglist

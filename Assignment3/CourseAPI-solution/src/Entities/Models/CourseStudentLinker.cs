@@ -24,6 +24,11 @@ namespace CourseAPI.Entities.Models {
         /// </summary>
         public string SSN { get; set; }
 
+        /// <summary>
+        /// The term if a student is active in course.
+        /// Example:
+        ///     1) true
+        /// </summary>
         public bool IsActive { get; set; }
 
 #region ForeignKeys
@@ -40,6 +45,9 @@ namespace CourseAPI.Entities.Models {
         public virtual Course Course { get; set; }
 #endregion
 
+        /// <summary>
+        /// Set the student active in the constructor.
+        /// </summary>
         public CourseStudentLinker() {
             IsActive = true;
         }

@@ -25,25 +25,39 @@ namespace CourseAPI.Services.Itf {
         ///     1) AddStudentToCourse(1, model);
         /// </summary>
         /// <returns>
-        /// A list of StudentDTO.
+        /// StudentDTO instance.
         /// </returns>
-        List<StudentDTO> AddStudentToCourse(int id, LinkerViewModel model, int capacity); 
+        StudentDTO AddStudentToCourse(int id, LinkerViewModel model, int capacity); 
 
         /// <summary>
+        /// Get all students of a courses waiting list by passing the required course id as a parameter.
+        /// Example:
+        ///     1) GetStudentsOfCourseWaitingList(1);
         /// </summary>
         /// <returns>
+        /// A list of StudentDTO.
         /// </returns>
         List<StudentDTO> GetStudentsOfCourseWaitingList(int id);
 
         /// <summary>
+        /// Add a student to a course waiting list by passing the course id and 
+        /// the LinkerViewModel as a parameter
+        /// Example:
+        ///     1) AddStudentToCourseWaitingList(1, model);
         /// </summary>
         /// <returns>
+        /// StudentDTO instance.
         /// </returns>
-        List<StudentDTO> AddStudentToCourseWaitingList(int id, LinkerViewModel model);
+        StudentDTO AddStudentToCourseWaitingList(int id, LinkerViewModel model);
 
         /// <summary>
+        /// Delete a student from the course by passing the required course id and the
+        /// LinkerViewModel as a parameter.
+        /// Example:
+        ///     1) DeleteStudentFromCourse(1, model);
         /// </summary>
         /// <returns>
+        /// Returns a boolean if the deletion was a success or not.
         /// </returns>
         bool DeleteStudentFromCourse(int id, LinkerViewModel model);
     }

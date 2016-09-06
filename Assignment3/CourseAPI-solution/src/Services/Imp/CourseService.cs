@@ -53,13 +53,14 @@ namespace CourseAPI.Services.Imp {
             var course = GetCourseFromDbById(id);
 
             if (course == null) {
-                throw new CustomObjectNotFoundException();
+                throw new CustomObjectNotFoundException("Course does not exist!\n");
             }
 
             return new CourseDetailsDTO {
                 Id = course.Id,
                 CourseId = course.CourseId, 
-                Name = GetNameOfCourse(course.CourseId)
+                Name = GetNameOfCourse(course.CourseId),
+                MaxStudents = course.MaxStudents
             };
         }
 
@@ -67,10 +68,10 @@ namespace CourseAPI.Services.Imp {
             var course = GetCourseFromDbById(id);
 
             if (course == null) {
-                throw new CustomObjectNotFoundException();
+                throw new CustomObjectNotFoundException("Course does not exist!\n");
             }
 
-            course.CourseId = model.CourseId;
+            course.CourseId = model.TemplateId;
             course.Semester = model.Semester;
             
             if (model.StartDate.HasValue) {
@@ -93,7 +94,7 @@ namespace CourseAPI.Services.Imp {
             var course = GetCourseFromDbById(id);
 
             if (course == null) {
-                throw new CustomObjectNotFoundException();
+                throw new CustomObjectNotFoundException("Course does not exist!\n");
             }
 
             _db.Courses.Remove(course);
@@ -104,16 +105,17 @@ namespace CourseAPI.Services.Imp {
             try {
                 var id  = _db.Courses.Any() ?
                     _db.Courses.Max(c => c.Id) + 1 :
-                    0;
+                    1;
 
                 var course = new Course {
                     Id = id,
-                       Semester = model.Semester,
-                       CourseId = model.CourseId,
-                       EndDate = model.EndDate.HasValue ?
-                           model.EndDate.Value : DateTime.Today,
-                       StartDate = model.StartDate.HasValue ?
-                           model.StartDate.Value : DateTime.Today
+                    Semester = model.Semester,
+                    CourseId = model.TemplateId,
+                    MaxStudents = model.MaxStudents,
+                    EndDate = model.EndDate.HasValue ?
+                        model.EndDate.Value : DateTime.Today,
+                    StartDate = model.StartDate.HasValue ?
+                        model.StartDate.Value : DateTime.Today
                 };
 
                 _db.Courses.Add(course);

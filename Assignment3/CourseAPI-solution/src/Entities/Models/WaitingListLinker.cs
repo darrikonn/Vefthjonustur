@@ -3,7 +3,7 @@ namespace CourseAPI.Entities.Models {
     using System.ComponentModel.DataAnnotations.Schema;
 
     /// <summary>
-    /// This class represents the link between a course and a student.
+    /// This class represents the link between the waiting list of a course and a student.
     /// The class gets mapped to a table in the database.
     /// The keys and foreign keys are added using fluent API.
     /// </summary>
