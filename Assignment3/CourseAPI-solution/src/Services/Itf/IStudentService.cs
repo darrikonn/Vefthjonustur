@@ -19,10 +19,10 @@ namespace CourseAPI.Services.Itf {
         List<StudentDTO> GetStudentsOfCourse(int id); 
 
         /// <summary>
-        /// Add a student to a course by passing the course id and 
+        /// Add a student to a course by passing the course id, course capacity and 
         /// the LinkerViewModel as a parameter
         /// Example:
-        ///     1) AddStudentToCourse(1, model);
+        ///     1) AddStudentToCourse(1, model, 4);
         /// </summary>
         /// <returns>
         /// StudentDTO instance.
@@ -51,14 +51,14 @@ namespace CourseAPI.Services.Itf {
         StudentDTO AddStudentToCourseWaitingList(int id, LinkerViewModel model);
 
         /// <summary>
-        /// Delete a student from the course by passing the required course id and the
-        /// LinkerViewModel as a parameter.
+        /// Delete a student from the course by passing the required course id and students ssn as
+        /// a parameter.
         /// Example:
-        ///     1) DeleteStudentFromCourse(1, model);
+        ///     1) DeleteStudentFromCourse(1, "1501933119");
         /// </summary>
         /// <returns>
         /// Returns a boolean if the deletion was a success or not.
         /// </returns>
-        bool DeleteStudentFromCourse(int id, LinkerViewModel model);
+        bool DeleteStudentFromCourse(int id, string ssn);
     }
 }

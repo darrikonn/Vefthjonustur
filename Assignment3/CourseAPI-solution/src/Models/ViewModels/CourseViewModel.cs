@@ -11,7 +11,7 @@ namespace CourseAPI.Models.ViewModels {
         /// The string id of a course.
         /// Required when updating/creating a course.
         /// Example: 
-        ///     1) T-514-VEFT
+        ///     1) "T-514-VEFT"
         /// </summary>
         [Required]
         public string TemplateId { get; set; }

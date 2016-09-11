@@ -6,7 +6,7 @@ The third assignment is to design and create a REST service using .NET Core and 
 It should support the following operations:
 
 ### 1. POST /api/courses
-> curl -i -X POST -d "TemplateID=T-514-VEFT&StartDate=20160818T00:00:00&EndDate=2016-11-10T00:00:00&Semester=20163&MaxStudents=4" localhost:5000/api/courses
+> curl -i -X POST -d "TemplateID=T-514-VEFT&StartDate=2016-08-18T00:00:00&EndDate=2016-11-10T00:00:00&Semester=20163&MaxStudents=4" localhost:5000/api/courses
 
 ### 2. POST /api/courses/{ID}/students 
 > curl -X POST -i -d "SSN=9876543210" localhost:5000/api/courses/1/students
@@ -30,7 +30,7 @@ It should support the following operations:
 > curl -X POST -i -d "SSN=1234567894" localhost:5000/api/courses/1/students
 
 ### 9. DELETE /api/courses/{ID}/students/1234567890
-> curl -X DELETE -i -d "SSN=1234567890" localhost:5000/api/courses/1/students
+> curl -X DELETE -i localhost:5000/api/courses/1/students/1234567890
 
 ### 10. GET /api/courses/{ID}/students
 > curl -X GET -i localhost:5000/api/courses/1/students

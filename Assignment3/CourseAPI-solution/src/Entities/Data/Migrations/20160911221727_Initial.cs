@@ -12,12 +12,12 @@ namespace Entities.Data.Migrations
                 name: "CourseTemplates",
                 columns: table => new
                 {
-                    CourseId = table.Column<string>(nullable: false),
+                    TemplateId = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CourseTemplates", x => x.CourseId);
+                    table.PrimaryKey("PK_CourseTemplates", x => x.TemplateId);
                 });
 
             migrationBuilder.CreateTable(
@@ -38,20 +38,20 @@ namespace Entities.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Autoincrement", true),
-                    CourseId = table.Column<string>(nullable: true),
                     EndDate = table.Column<DateTime>(nullable: false),
                     MaxStudents = table.Column<int>(nullable: false),
                     Semester = table.Column<string>(nullable: true),
-                    StartDate = table.Column<DateTime>(nullable: false)
+                    StartDate = table.Column<DateTime>(nullable: false),
+                    TemplateId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Courses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Courses_CourseTemplates_CourseId",
-                        column: x => x.CourseId,
+                        name: "FK_Courses_CourseTemplates_TemplateId",
+                        column: x => x.TemplateId,
                         principalTable: "CourseTemplates",
-                        principalColumn: "CourseId",
+                        principalColumn: "TemplateId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -105,9 +105,9 @@ namespace Entities.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Courses_CourseId",
+                name: "IX_Courses_TemplateId",
                 table: "Courses",
-                column: "CourseId");
+                column: "TemplateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CourseStudentLinkers_Id",

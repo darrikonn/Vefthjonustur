@@ -62,7 +62,7 @@ namespace CourseAPI.Entities.Data {
                 }
                 if (!db.CourseTemplates.Any()) {
                     db.CourseTemplates.Add(new CourseTemplate {
-                        CourseId = "T-514-VEFT",
+                        TemplateId = "T-514-VEFT",
                         Name = "Vefþjónustur"
                     });
                 }

@@ -2,38 +2,22 @@ namespace CourseAPI.Entities.Models {
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    /// <summary>
-    /// This class represents the link between the waiting list of a course and a student.
-    /// The class gets mapped to a table in the database.
-    /// The keys and foreign keys are added using fluent API.
-    /// </summary>
+    /*
+     * This class maps the waiting list table to the database.
+     * This class is internal.
+     * Using fluent api for double key attributes
+     */
     public class WaitingListLinker {
-        /// <summary>
-        /// The integer id of a course.
-        /// This is a key in this table.
-        /// Example:
-        ///     1) 1
-        /// </summary>
+        // Key
         public int Id { get; set; }
 
-        /// <summary>
-        /// The social security number of a student.
-        /// This is a key in this table.
-        /// Example:
-        ///     1) 1501933119
-        /// </summary>
+        // Key
         public string SSN { get; set; }
 
 #region ForeignKeys
-        /// <summary>
-        /// The foreign key from SSN in CourseStudentLinker equals SSN in Student.
-        /// </summary>
         [ForeignKey("SSN")]
         public virtual Student Student { get; set; }
 
-        /// <summary>
-        /// The foreign key from Id in CourseStudentLinker equals Id in Course.
-        /// </summary>
         [ForeignKey("Id")]
         public virtual Course Course { get; set; }
 #endregion

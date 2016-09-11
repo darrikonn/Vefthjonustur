@@ -6,6 +6,8 @@ namespace CourseAPI.Models.DTOModels {
     public class CourseListDTO : CourseDTO {
         /// <summary>
         /// The number of students in a specific course.
+        /// Example:
+        ///     1) 4
         /// </summary>
         public int NumberOfStudents { get; set; }
     }

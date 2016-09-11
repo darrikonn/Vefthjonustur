@@ -8,10 +8,10 @@ namespace CourseAPI.Services.Imp {
     using CourseAPI.Models.ViewModels;
     using CourseAPI.Models.DTOModels;
 
-    /// <summary>
-    /// This class implements the functions that the IStudentService interface specifies.
-    /// This class is internal so it doesn't need XML documentation.
-    /// </summary>
+    /*
+     * This class implements the functions that the IStudentService interface specifies.
+     * This class is internal.
+     */
     public class StudentService : IStudentService {
         private readonly ApplicationDbContext _db;
 
@@ -94,6 +94,9 @@ namespace CourseAPI.Services.Imp {
 
             var csLink = GetCourseStudentLink(id, model.SSN);
             if (csLink != null) {
+                if (csLink.IsActive) {
+                    throw new CustomConflictException($"{student.Name} is already enrolled as a student\n");
+                }
                 csLink.IsActive = true;
             } else {
                 _db.CourseStudentLinkers.Add(new CourseStudentLinker {
@@ -137,7 +140,7 @@ namespace CourseAPI.Services.Imp {
             ValidateWLLink(id, model.SSN);
 
             var csLink = GetCourseStudentLink(id, model.SSN);
-            if (csLink != null) {
+            if (csLink != null && csLink.IsActive) {
                 throw new CustomForbiddenException($"{student.Name} is already enrolled as a student\n");
             }
 
@@ -152,10 +155,10 @@ namespace CourseAPI.Services.Imp {
             };
         }
 
-        public bool DeleteStudentFromCourse(int id, LinkerViewModel model) {
-            ValidateUser(model.SSN);
+        public bool DeleteStudentFromCourse(int id, string ssn) {
+            ValidateUser(ssn);
 
-            var link = GetCourseStudentLink(id, model.SSN);
+            var link = GetCourseStudentLink(id, ssn);
             if (link == null) {
                 throw new CustomObjectNotFoundException("Student does not exist in this course!\n");
             }

@@ -8,7 +8,7 @@ using CourseAPI.Entities.Data;
 namespace Entities.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20160906120826_Initial")]
+    [Migration("20160911221727_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,8 +21,6 @@ namespace Entities.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("CourseId");
-
                     b.Property<DateTime>("EndDate");
 
                     b.Property<int>("MaxStudents");
@@ -31,9 +29,11 @@ namespace Entities.Data.Migrations
 
                     b.Property<DateTime>("StartDate");
 
+                    b.Property<string>("TemplateId");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("TemplateId");
 
                     b.ToTable("Courses");
                 });
@@ -57,11 +57,11 @@ namespace Entities.Data.Migrations
 
             modelBuilder.Entity("CourseAPI.Entities.Models.CourseTemplate", b =>
                 {
-                    b.Property<string>("CourseId");
+                    b.Property<string>("TemplateId");
 
                     b.Property<string>("Name");
 
-                    b.HasKey("CourseId");
+                    b.HasKey("TemplateId");
 
                     b.ToTable("CourseTemplates");
                 });
@@ -96,7 +96,7 @@ namespace Entities.Data.Migrations
                 {
                     b.HasOne("CourseAPI.Entities.Models.CourseTemplate", "CourseTemplate")
                         .WithMany()
-                        .HasForeignKey("CourseId");
+                        .HasForeignKey("TemplateId");
                 });
 
             modelBuilder.Entity("CourseAPI.Entities.Models.CourseStudentLinker", b =>

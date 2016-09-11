@@ -62,7 +62,6 @@ namespace CourseAPI.API.Controllers {
         /// </summary>
         /// <returns>
         /// Returns a more detailed course object, called CourseDetailsDTO.
-        /// If not found, then it returns HTTP 404.
         /// </returns>
         [HttpGet]
         [Route("{id:int}", Name="GetCourse")]
@@ -90,7 +89,6 @@ namespace CourseAPI.API.Controllers {
         /// </summary>
         /// <returns>
         /// Returns a list of all students (StudentDTO) in a given course.
-        /// If course is not found, then return HTTP 404.
         /// </returns>
         [HttpGet]
         [Route("{id:int}/students", Name="GetStudentsOfCourse")]
@@ -116,7 +114,6 @@ namespace CourseAPI.API.Controllers {
         /// </summary>
         /// <returns>
         /// Returns a list of all students (StudentDTO) in the waiting list of a course.
-        /// If course is not found, then return HTTP 404.
         /// </returns>
         [HttpGet]
         [Route("{id:int}/waitinglist", Name="GetCourseWaitingList")]
@@ -139,19 +136,17 @@ namespace CourseAPI.API.Controllers {
         /// <summary>
         /// PUT: /api/courses/{id}
         /// Examples:
-        ///     1) curl -i -X PUT -d "CourseId=T-500-ERR"&Semester=20153&MaxStudents=4" <hostname>/api/courses/1
+        ///     1) curl -i -X PUT -d "TemplateId=T-500-ERR"&Semester=20153&MaxStudents=4" <hostname>/api/courses/1
         /// Allows the client of the API to modify the given course instance.
         /// Mutable objects are StartDate and EndDate.
-        /// Immutable objects are CourseId, MaxStudents and Semester.
+        /// Immutable objects are TemplateId, Semester and MaxStudents.
         /// </summary>
         /// <returns>
         /// Returns the updated course (CourseDetailsDTO).
-        /// If course is not found, return HTTP 404.
-        /// If model state is invalid, return HTTP 412.
         /// </returns>
         [HttpPut]
         [Route("{id:int}")]
-        public IActionResult Update(int id, CourseViewModel model) {
+        public IActionResult Update(int id, [FromBody]CourseViewModel model) {
             // validate model
             if (!ModelState.IsValid) {
                 var errors = ModelState.Select(x => x.Value.Errors)
@@ -185,7 +180,6 @@ namespace CourseAPI.API.Controllers {
         /// </summary>
         /// <returns>
         /// Returns no content if deletion was successful.
-        /// If course was not found, return HTTP 404.
         /// </returns>
         [HttpDelete]
         [Route("{id:int}")]
@@ -204,20 +198,20 @@ namespace CourseAPI.API.Controllers {
         }
 
         /// <summary>
-        /// DELETE: /api/courses/{id}/students
+        /// DELETE: /api/courses/{id}/students/{ssn}
         /// Examples:
-        ///     1) curl -i -d "SSN=1234567890" -X DELETE <hostname>/api/courses/1/students
-        /// Removes a student from a given course.
+        ///     1) curl -i -X DELETE <hostname>/api/courses/1/students/1234567890
+        /// "Removes" a student from a given course.
+        /// It's actually not removing, but instead it updates the active attribute of a link
         /// </summary>
         /// <returns>
         /// Returns no content if deletion was successful.
-        /// If course or student were not found, return HTTP 404.
         /// </returns>
         [HttpDelete]
-        [Route("{id:int}/students")]
-        public IActionResult Delete(int id, LinkerViewModel model) {
+        [Route("{id:int}/students/{ssn}")]
+        public IActionResult Delete(int id, string ssn) {
             try {
-                if (!_studentService.DeleteStudentFromCourse(id, model)) {
+                if (!_studentService.DeleteStudentFromCourse(id, ssn)) {
                     throw new Exception();
                 }
                 
@@ -234,16 +228,16 @@ namespace CourseAPI.API.Controllers {
         /// <summary>
         /// POST: /api/courses
         /// Examples:
-        ///     1) curl -i -X -d "CourseId=T-500-ERR&Semester=20153&MaxStudents=10" POST <hostname>/api/courses
+        ///     1) curl -i -X -d "TemplateId=T-500-ERR&Semester=20153&MaxStudents=10" POST <hostname>/api/courses
         /// Adds a new course to the database.
         /// Mutable objects are StartDate and EndDate.
-        /// Immutable objects are CourseId, Semester and MaxStudents.
+        /// Immutable objects are TemplateId, Semester and MaxStudents.
         /// </summary>
         /// <returns>
         /// Returns the newly added course (CourseDetailsDTO) with status code 201.
         /// </returns>
         [HttpPost]
-        public IActionResult Add(CourseViewModel model) {
+        public IActionResult Add([FromBody]CourseViewModel model) {
             if (!ModelState.IsValid) {
                 var errors = ModelState.Select(x => x.Value.Errors)
                            .Where(y=>y.Count>0)
@@ -272,12 +266,10 @@ namespace CourseAPI.API.Controllers {
         /// </summary>
         /// <returns>
         /// Returns the student name and a message; with status code 201 if successful.
-        /// If course was not found, return HTTP 404.
-        /// If model state is invalid, return HTTP 412.
         /// </returns>
         [HttpPost]
         [Route("{id:int}/students")]
-        public IActionResult StudentAdd(int id, LinkerViewModel model) {
+        public IActionResult StudentAdd(int id, [FromBody]LinkerViewModel model) {
             if (!ModelState.IsValid) {
                 var errors = ModelState.Select(x => x.Value.Errors)
                            .Where(y=>y.Count>0)
@@ -315,12 +307,10 @@ namespace CourseAPI.API.Controllers {
         /// </summary>
         /// <returns>
         /// Returns the student name + message; with status code 200 if successful.
-        /// If course or student were not found, return HTTP 404.
-        /// If model state is invalid, return HTTP 412.
         /// </returns>
         [HttpPost]
         [Route("{id:int}/waitinglist")]
-        public IActionResult WaitingListAdd(int id, LinkerViewModel model) {
+        public IActionResult WaitingListAdd(int id, [FromBody]LinkerViewModel model) {
             if (!ModelState.IsValid) {
                 var errors = ModelState.Select(x => x.Value.Errors)
                            .Where(y=>y.Count>0)

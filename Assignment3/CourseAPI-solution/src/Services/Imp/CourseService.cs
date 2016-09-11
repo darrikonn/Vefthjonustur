@@ -9,10 +9,10 @@ namespace CourseAPI.Services.Imp {
     using CourseAPI.Models.ViewModels;
     using CourseAPI.Models.DTOModels;
 
-    /// <summary>
-    /// This class implements the functions that the ICourseService interface specifies.
-    /// This class is internal so it doesn't need XML documentation.
-    /// </summary>
+    /*
+     * This class implements the functions that the ICourseService interface specifies.
+     * This class is internal.
+     */
     public class CourseService : ICourseService {
         private readonly ApplicationDbContext _db;
 
@@ -29,9 +29,9 @@ namespace CourseAPI.Services.Imp {
             return course;
         }
 
-        private string GetNameOfCourse(string courseId) {
+        private string GetNameOfCourse(string templateId) {
             var courseName = (from t in _db.CourseTemplates
-                              where t.CourseId == courseId
+                              where t.TemplateId == templateId
                               select t.Name).SingleOrDefault();
             return courseName;
         }
@@ -44,8 +44,8 @@ namespace CourseAPI.Services.Imp {
                 
             return courses.Select(c => new CourseListDTO {
                 Id = c.Id,
-                CourseId = c.CourseId,
-                Name = GetNameOfCourse(c.CourseId)
+                TemplateId = c.TemplateId,
+                Name = GetNameOfCourse(c.TemplateId)
             }).ToList();
         }
 
@@ -58,8 +58,8 @@ namespace CourseAPI.Services.Imp {
 
             return new CourseDetailsDTO {
                 Id = course.Id,
-                CourseId = course.CourseId, 
-                Name = GetNameOfCourse(course.CourseId),
+                TemplateId = course.TemplateId, 
+                Name = GetNameOfCourse(course.TemplateId),
                 MaxStudents = course.MaxStudents
             };
         }
@@ -71,7 +71,7 @@ namespace CourseAPI.Services.Imp {
                 throw new CustomObjectNotFoundException("Course does not exist!\n");
             }
 
-            course.CourseId = model.TemplateId;
+            course.TemplateId = model.TemplateId;
             course.Semester = model.Semester;
             
             if (model.StartDate.HasValue) {
@@ -85,8 +85,8 @@ namespace CourseAPI.Services.Imp {
 
             return new CourseDetailsDTO {
                 Id = course.Id,
-                CourseId = course.CourseId, 
-                Name = GetNameOfCourse(course.CourseId)
+                TemplateId = course.TemplateId, 
+                Name = GetNameOfCourse(course.TemplateId)
             };
         }
 
@@ -103,14 +103,11 @@ namespace CourseAPI.Services.Imp {
 
         public int AddCourse(CourseViewModel model) {
             try {
-                var id  = _db.Courses.Any() ?
-                    _db.Courses.Max(c => c.Id) + 1 :
-                    1;
-
+                // the datatype model auto increments the id attribute
                 var course = new Course {
-                    Id = id,
+                    //Id = id,
                     Semester = model.Semester,
-                    CourseId = model.TemplateId,
+                    TemplateId = model.TemplateId,
                     MaxStudents = model.MaxStudents,
                     EndDate = model.EndDate.HasValue ?
                         model.EndDate.Value : DateTime.Today,
@@ -121,7 +118,7 @@ namespace CourseAPI.Services.Imp {
                 _db.Courses.Add(course);
                 _db.SaveChanges();
 
-                return id;
+                return course.Id;
             } catch(Exception) {
                 return -1;
             }
