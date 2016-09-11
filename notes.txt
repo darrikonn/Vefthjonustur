@@ -105,7 +105,7 @@ left outer join = joint t in ttt where t.id equals into typpi
 
 setja [ForeignKey("")] fyrir ofan virtual i entity
 
-
+[FromBody] er must! sem parameter
 
 
 
