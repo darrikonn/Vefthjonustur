@@ -107,11 +107,34 @@ setja [ForeignKey("")] fyrir ofan virtual i entity
 
 [FromBody] er must! sem parameter
 
+mkdir tests
+dotnet new -t xunittest
+
+using System;
+using Xunit;
+
+dotnet test
+
+windows
+[TestClass]
+[TestInitialize]
+[TestMethod]
+
+left outer join a main teacher, til ad fa einnig null tho ad thad se enginn kennari
+
+XML documentation:
+///<param name="model">The data which indicates which person should be added as a teacher, and in what role</param>
+public IActionResult blabla(AddTeacherViewModel model){}
+
+bua til interface fyrir AppDataContext = IDBContext
+
+Testinitializer keyrir a undan ollum follum i hvert einasta skipti.
 
 
-
-
-
+var courseList = Builder<Course>.CreateListOfSize(10)
+                        .TheFirst(6).With(x => x.Semester = "20153")
+                        .TheLast(4).With(y => y.Semester = "20163")
+                        .Build().ToList();
 
 
 
