@@ -1,18 +1,15 @@
 ﻿using CoursesAPI.Services.Utilities;
 using Xunit;
 
-namespace CoursesAPI.Tests.Utilities
-{
-	public class DateTimeUtilsTests
-	{
+namespace CoursesAPI.Tests.Utilities {
+	public class DateTimeUtilsTests {
 		#region IsLeapYear
 
 		/// <summary>
 		/// Years not divisible by 4 are definitely not leap years:
 		/// </summary>
 		[Fact]
-		public void IsLeapYear_TestForNonLeapYear()
-		{
+		public void IsLeapYear_TestForNonLeapYear() {
 			// Act:
 			var result = DateTimeUtils.IsLeapYear(2015);
 
@@ -25,8 +22,7 @@ namespace CoursesAPI.Tests.Utilities
 		/// (but see below).
 		/// </summary>
 		[Fact]
-		public void IsLeapYear_TestForStandardLeapYearDivisibleBy4()
-		{
+		public void IsLeapYear_TestForStandardLeapYearDivisibleBy4() {
 			// Act:
 			var result = DateTimeUtils.IsLeapYear(2012);
 
@@ -38,8 +34,7 @@ namespace CoursesAPI.Tests.Utilities
 		/// Years divisible by 400 are always leap years:
 		/// </summary>
 		[Fact]
-		public void IsLeapYear_TestForLeapYearDivisibleBy400()
-		{
+		public void IsLeapYear_TestForLeapYearDivisibleBy400() {
 			// Act:
 			var result = DateTimeUtils.IsLeapYear(1600);
 
@@ -52,8 +47,7 @@ namespace CoursesAPI.Tests.Utilities
 		/// unless they are divisible by 400:
 		/// </summary>
 		[Fact]
-		public void IsLeapYear_TestForNonLeapYearDivisibleBy100()
-		{
+		public void IsLeapYear_TestForNonLeapYearDivisibleBy100() {
 			// Act:
 			var result = DateTimeUtils.IsLeapYear(1900);
 
@@ -65,8 +59,7 @@ namespace CoursesAPI.Tests.Utilities
 		/// Finally, throw in yet another test, just for good measure...
 		/// </summary>
 		[Fact]
-		public void IsLeapYear_TestForNonLeapYearEdgeCase1()
-		{
+		public void IsLeapYear_TestForNonLeapYearEdgeCase1() {
 			// Act:
 			var result = DateTimeUtils.IsLeapYear(1999);
 

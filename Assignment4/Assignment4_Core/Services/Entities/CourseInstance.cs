@@ -1,11 +1,9 @@
-﻿namespace CoursesAPI.Services.Models.Entities
-{
+﻿namespace CoursesAPI.Services.Models.Entities {
 	/// <summary>
 	/// A course instance is an instance of a course template, taught
 	/// on a given semester.
 	/// </summary>
-	public class CourseInstance
-	{
+	public class CourseInstance {
 		/// <summary>
 		/// A database-generated ID.
 		/// </summary>

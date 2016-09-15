@@ -1,7 +1,6 @@
 ﻿using System;
 
-namespace CoursesAPI.Services.Models.Entities
-{
+namespace CoursesAPI.Services.Models.Entities {
 	/// <summary>
 	/// A semester represents a period in which courses are taught.
 	/// Each semester has an ID, which is the year when the semester
@@ -10,8 +9,7 @@ namespace CoursesAPI.Services.Models.Entities
 	/// 2 - summer semester
 	/// 3 - fall semester
 	/// </summary>
-	public class Semester
-	{
+	public class Semester {
 		/// <summary>
 		/// The ID of the semester. Example: "20143".
 		/// </summary>

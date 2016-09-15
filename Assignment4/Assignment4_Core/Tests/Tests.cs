@@ -1,13 +1,10 @@
 ﻿using System;
 using Xunit;
 
-namespace Tests
-{
-    public class Tests
-    {
+namespace Tests {
+    public class Tests {
         [Fact]
-        public void Test1() 
-        {
+        public void Test1() {
             Assert.True(true);
         }
     }

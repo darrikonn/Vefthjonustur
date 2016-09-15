@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CoursesAPI.Services.DataAccess
-{
+namespace CoursesAPI.Services.DataAccess {
 	/// <summary>
 	/// Class that implements Unit Of Work pattern
 	/// Communicates with EF DataContext
@@ -15,8 +14,7 @@ namespace CoursesAPI.Services.DataAccess
 	/// var result = service.getAll();
 	/// </summary>
 	/// <typeparam name="TContext"></typeparam>
-	public class UnitOfWork<TContext> : IUnitOfWork where TContext : IDbContext, new()
-	{
+	public class UnitOfWork<TContext> : IUnitOfWork where TContext : IDbContext, new() {
 		#region Member variables
 		private readonly IDbContext               _ctx;
 		private readonly Dictionary<Type, object> _repositories;
@@ -26,8 +24,7 @@ namespace CoursesAPI.Services.DataAccess
 		/// <summary>
 		/// Constructor that initializes the context and Repository dictionary
 		/// </summary>
-		public UnitOfWork()
-		{
+		public UnitOfWork() {
 			_ctx = new TContext();
 			_repositories = new Dictionary<Type, object>();
 			_disposed = false;
@@ -38,8 +35,7 @@ namespace CoursesAPI.Services.DataAccess
 		/// </summary>
 		/// <typeparam name="TEntity">Model class, type of repository</typeparam>
 		/// <returns>Repository for a specific Model class</returns>
-		public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
-		{
+		public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class {
 			// Checks if the Dictionary Key contains the Model class
 			if (_repositories.Keys.Contains(typeof(TEntity)))
 			{
@@ -56,13 +52,11 @@ namespace CoursesAPI.Services.DataAccess
 			return repository;
 		}
 
-		public void Save()
-		{
+		public void Save() {
 			_ctx.SaveChanges();
 		}
 
-		public void Dispose()
-		{
+		public void Dispose() {
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
@@ -71,12 +65,9 @@ namespace CoursesAPI.Services.DataAccess
 		/// Will handle disposing the context
 		/// </summary>
 		/// <param name="disposing"></param>
-		protected virtual void Dispose(bool disposing)
-		{
-			if (!this._disposed)
-			{
-				if (disposing)
-				{
+		protected virtual void Dispose(bool disposing) {
+			if (!this._disposed) {
+				if (disposing) {
 					_ctx.Dispose();
 				}
 

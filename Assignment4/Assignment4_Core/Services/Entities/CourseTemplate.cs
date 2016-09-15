@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CoursesAPI.Services.Models.Entities
-{
+namespace CoursesAPI.Services.Models.Entities {
 	/// <summary>
 	/// A course template represents a given course which is taught
 	/// in the school. Please don't confuse this with the
@@ -11,8 +10,7 @@ namespace CoursesAPI.Services.Models.Entities
 	/// on some semester, such that we can find out what courses
 	/// are available, regardless of the semester.
 	/// </summary>
-	public class CourseTemplate
-	{
+	public class CourseTemplate {
 		/// <summary>
 		/// A human-readable ID of the course. Example: "T-514-VEFT".
 		/// </summary>

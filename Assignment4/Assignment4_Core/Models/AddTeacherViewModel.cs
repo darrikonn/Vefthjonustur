@@ -1,11 +1,9 @@
-﻿namespace CoursesAPI.Models
-{
+﻿namespace CoursesAPI.Models {
 	/// <summary>
 	/// This class represents the data needed when registering
 	/// a teacher in a course.
 	/// </summary>
-	public class AddTeacherViewModel
-	{
+	public class AddTeacherViewModel {
 		/// <summary>
 		/// The SSN of the person which will be registered
 		/// as a teacher in a course.

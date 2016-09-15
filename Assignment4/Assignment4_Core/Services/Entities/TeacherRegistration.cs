@@ -1,13 +1,11 @@
-﻿	using CoursesAPI.Models;
+﻿using CoursesAPI.Models;
 
-namespace CoursesAPI.Services.Models.Entities
-{
+namespace CoursesAPI.Services.Models.Entities {
 	/// <summary>
 	/// An instance of this class represents the fact that a given
 	/// person is a teacher in a given course instance.
 	/// </summary>
-	public class TeacherRegistration
-	{
+	public class TeacherRegistration {
 		/// <summary>
 		/// A database-generated ID of the teacher registration.
 		/// </summary>

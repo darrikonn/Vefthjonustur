@@ -1,11 +1,9 @@
-﻿namespace CoursesAPI.Models
-{
+﻿namespace CoursesAPI.Models {
 	/// <summary>
 	/// This is a lightweight class for a person, does not
 	/// contain any details about the person.
 	/// </summary>
-	public class PersonDTO
-	{
+	public class PersonDTO {
 		/// <summary>
 		/// The SSN of the person. Example:
 		/// "1234567890"

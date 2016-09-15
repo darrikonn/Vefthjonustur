@@ -1,14 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CoursesAPI.Services.Models.Entities
-{
+namespace CoursesAPI.Services.Models.Entities {
 	/// <summary>
 	/// Each person in the school, be it a student or a teacher,
 	/// has a single Person object associated with him/her.
 	/// </summary>
 	[Table("Persons")]
-	public class Person
-	{
+	public class Person {
 		/// <summary>
 		/// A database-generated ID of the person.
 		/// </summary>

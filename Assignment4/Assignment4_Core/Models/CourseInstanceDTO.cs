@@ -1,10 +1,8 @@
-﻿namespace CoursesAPI.Models
-{
+﻿namespace CoursesAPI.Models {
 	/// <summary>
 	/// This class represents a single course instance.
 	/// </summary>
-	public class CourseInstanceDTO
-	{
+	public class CourseInstanceDTO {
 		/// <summary>
 		/// The database-generated ID of the course instance.
 		/// </summary>

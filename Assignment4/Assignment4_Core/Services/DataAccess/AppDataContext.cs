@@ -1,10 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using CoursesAPI.Services.Models.Entities;
 
-namespace CoursesAPI.Services.DataAccess
-{
-	public class AppDataContext : DbContext, IDbContext
-	{
+namespace CoursesAPI.Services.DataAccess {
+	public class AppDataContext : DbContext, IDbContext {
 		public DbSet<Person>              Persons              { get; set; }
 		public DbSet<Semester>            Semesters            { get; set; }
 		public DbSet<CourseTemplate>      CourseTemplates      { get; set; }
