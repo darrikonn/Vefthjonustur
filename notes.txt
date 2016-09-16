@@ -137,5 +137,20 @@ var courseList = Builder<Course>.CreateListOfSize(10)
                         .Build().ToList();
 
 
+til ad fa watch til ad virka, tha setur madur i project.json:
+"tools": {
+    "Microsoft.DotNet.Watcher.Tools": "1.0.0-preview2-final"
+    }
+
+
+i stadinn fyrir ModelState.IsValid, ad vera tha frekar med:
+CourseAPIValidation clasa og kalla sidan a hann i controllerinum med:
+CourseAPIValidation.Validate(model);
+
+setja a filter fyrir exception handling
+bua til errorcodes clasa sem er constant fyrir error koda
+bua til javascript fyrir clientinn sem breytir error kodanum i ensku, isl og spaensku.
+Hafa thetta i Exceptions file-num i services
+
 
 
