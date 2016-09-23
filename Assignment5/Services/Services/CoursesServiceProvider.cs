@@ -33,6 +33,12 @@
                     select p.Name).DefaultIfEmpty("").Single();
         }
 
+        private int GetCountOfCourses(string semester) {
+            return (from c in _courseInstances.All()
+                    where c.SemesterID == semester
+                    select c).Count();
+        }
+
 		/// <summary>
 		/// You should implement this function, such that all tests will pass.
 		/// </summary>
@@ -111,17 +117,18 @@
                 page = 1;
             }
 
+            // select objects because linq queries are not thread safe
             var courses = (from c in _courseInstances.All()
                     join ct in _courseTemplates.All() on c.CourseID equals ct.CourseID
                     join tr in _teacherRegistrations.All() on c.ID equals tr.CourseInstanceID into reges
                     from r in reges.Where(x => x.Type == TeacherType.MainTeacher).DefaultIfEmpty()
                     where c.SemesterID == semester
-                    select new {c, ct, r}).ToList();
+                    select new {c, ct, r}).Skip((page-1)*_pageSize).Take(_pageSize).ToList();
             
-            var cnt = courses.Count();
+            var cnt = GetCountOfCourses(semester);
             // return an envelope
             return new PageResult<CourseInstanceDTO> { 
-                Items = courses.Skip((page-1)*_pageSize).Take(_pageSize).Select(c => 
+                Items = courses.Select(c => 
                     new CourseInstanceDTO {
                         Name = lang == LanguageUtils.Language.Icelandic 
                                 ?  c.ct.Name 
