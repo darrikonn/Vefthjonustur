@@ -153,4 +153,34 @@ bua til javascript fyrir clientinn sem breytir error kodanum i ensku, isl og spa
 Hafa thetta i Exceptions file-num i services
 
 
+Fyrir object paging (item, page) tha getum vid gert i Utilities:
+PageResult.cs
+class PageInfo {
+    public int PageSize {get; set;}
+    puglic int TotalNumberOfItems {get; set;}
+}
+class PageResult<T> {
+    public List<T> Items {get; set;}
+    public PageInfo Paging {get; set;}
+}
+
+Skila PageResult<CourseInstanceDTO>
+
+
+Security Token Service skilar Token og ser um authentication fyrir adra API
+API-inn skodar sidan tokenid og kallar i STS til ad sja hvort ad Token se i lagi
+STS getur sidan verid ad tala vid eitthvern annan gagnagrunn, t.d. facebook, twitter, adfs
+Json web token er base64 encoded strengur, ekkert meira oryggi, bara scrambla.
+Token skiptist i header, payload (data) og encodeing
+Access token, id token, refresh token
+
+[Authorize(Scope="admin")]
+
+Til ad kalla i API med token, tha geriru i Http headers->authorization:
+Bearer <tokenCode>
+
+
+
+
+
 

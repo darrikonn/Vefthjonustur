@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using CoursesAPI.Models;
-using CoursesAPI.Services.DataAccess;
-using CoursesAPI.Services.Exceptions;
-using CoursesAPI.Services.Models.Entities;
-
-namespace CoursesAPI.Services.Services {
+﻿namespace CoursesAPI.Services.Services {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using CoursesAPI.Models;
+    using DataAccess;
+    using Exceptions;
+    using Models.Entities;
     using Utilities;
 
 	public class CoursesServiceProvider {
@@ -98,17 +97,18 @@ namespace CoursesAPI.Services.Services {
 		/// modify it, such that it will correctly return the name of the main
 		/// teacher of each course.
 		/// </summary>
-		/// <param name="lang"></param>
-		/// <param name="page"></param>
-		/// <param name="semester"></param>
+		/// <param name="lang">The language from the accept-language header.</param>
+		/// <param name="page">The page that the use want to fetch.</param>
+		/// <param name="semester">The semester of the courses being fetched.</param>
 		/// <returns></returns>
-        public CourseEnvelopeDTO GetCourseInstancesBySemester(LanguageUtils.Language lang = 
-                LanguageUtils.Language.Icelandic, int page = 0, string semester = null) {
+        public PageResult<CourseInstanceDTO> GetCourseInstancesBySemester(
+                LanguageUtils.Language lang = LanguageUtils.Language.Icelandic, 
+                int page = 1, string semester = null) {
             if (string.IsNullOrEmpty(semester)) {
                 semester = "20153";
             }
-            if (page < 0) {
-                page = 0;
+            if (page < 1) {
+                page = 1;
             }
 
             var courses = (from c in _courseInstances.All()
@@ -118,9 +118,10 @@ namespace CoursesAPI.Services.Services {
                     where c.SemesterID == semester
                     select new {c, ct, r}).ToList();
             
-            // return an envelope of CourseInstanceDTOs and PagingDTO
-            return new CourseEnvelopeDTO { 
-                Items = courses.Skip(page*_pageSize).Take(_pageSize).Select(c => 
+            var cnt = courses.Count();
+            // return an envelope
+            return new PageResult<CourseInstanceDTO> { 
+                Items = courses.Skip((page-1)*_pageSize).Take(_pageSize).Select(c => 
                     new CourseInstanceDTO {
                         Name = lang == LanguageUtils.Language.Icelandic 
                                 ?  c.ct.Name 
@@ -130,10 +131,11 @@ namespace CoursesAPI.Services.Services {
                         MainTeacher = GetNameOfPerson(c.r == null ? "" : c.r.SSN)
                     }
                 ).ToList(),
-                Paging = new PagingDTO {
-                    PageCount = courses.Count() / 10 + 1,
-                    PageNumber = ++page,
-                    TotalNumberOfItems = courses.Count() % 10
+                Paging = new PageInfo {
+                    PageCount = (cnt / _pageSize) + 1,
+                    PageSize = _pageSize,
+                    PageNumber = page,
+                    TotalNumberOfItems = cnt
                 }
             };
         }

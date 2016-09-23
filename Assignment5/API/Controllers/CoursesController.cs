@@ -16,8 +16,16 @@ namespace CoursesAPI.Controllers {
 			_service = new CoursesServiceProvider(uow);
 		}
 
+		/// <summary>
+        /// GET: api/courses
+        /// Example:
+        ///     1) curl -X GET -H "accept-language: en-US" localhost:5000/api/courses?semester=20163
+		/// </summary>
+		/// <param name="page">The page being fetched.</param>
+		/// <param name="semester">The semester of the courses.</param>
+		/// <returns>An envelope of the page and CourseInstanceDTO</returns>
 		[HttpGet]
-		public IActionResult GetCoursesBySemester(int page = 0, string semester = null) {
+		public IActionResult GetCoursesBySemester(int page = 1, string semester = null) {
             try {
                 return Ok(_service.GetCourseInstancesBySemester(
                             LanguageUtils.GetLanguage(Request.Headers["Accept-Language"]),

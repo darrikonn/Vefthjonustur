@@ -186,8 +186,8 @@ namespace CoursesAPI.Tests.Services {
             var isl = LanguageUtils.Language.Icelandic;
 
             // Act:
-            var result0 = _service.GetCourseInstancesBySemester(isl, 0, semester0);
-            var result1 = _service.GetCourseInstancesBySemester(isl, 0, semester1);
+            var result0 = _service.GetCourseInstancesBySemester(isl, 0, semester0).Items;
+            var result1 = _service.GetCourseInstancesBySemester(isl, 0, semester1).Items;
 
             // Assert:
             Assert.Equal(3, result0.Count);
@@ -211,11 +211,11 @@ namespace CoursesAPI.Tests.Services {
         /// If no semester is defined, it should return all courses for the semester 20153
         /// </summary>
         [Fact]
-        public void GetCoursesBySemester_ReturnsCoursesOf2053WhenNoDataIsDefined() {
+        public void GetCoursesBySemester_ReturnsCoursesOf20153WhenNoDataIsDefined() {
             // Arrange:
 
             // Act:
-            var result0 = _service.GetCourseInstancesBySemester();
+            var result0 = _service.GetCourseInstancesBySemester().Items;
 
             // Assert:
             Assert.Equal(2, result0.Count);
@@ -242,9 +242,9 @@ namespace CoursesAPI.Tests.Services {
             var isl = LanguageUtils.Language.Icelandic;
 
             // Act:
-            var result0 = _service.GetCourseInstancesBySemester(isl, 0, semester0);
-            var result1 = _service.GetCourseInstancesBySemester(isl, 0, semester1);
-            var result2 = _service.GetCourseInstancesBySemester(isl, 0, semester2);
+            var result0 = _service.GetCourseInstancesBySemester(isl, 0, semester0).Items;
+            var result1 = _service.GetCourseInstancesBySemester(isl, 0, semester1).Items;
+            var result2 = _service.GetCourseInstancesBySemester(isl, 0, semester2).Items;
 
             // Assert:
             Assert.Equal(2, result0.Count);
@@ -269,8 +269,8 @@ namespace CoursesAPI.Tests.Services {
             var isl = LanguageUtils.Language.Icelandic;
 
             // Act:
-            var result0 = _service.GetCourseInstancesBySemester(isl, 0, semester0);
-            var result1 = _service.GetCourseInstancesBySemester(isl, 0, semester1);
+            var result0 = _service.GetCourseInstancesBySemester(isl, 0, semester0).Items;
+            var result1 = _service.GetCourseInstancesBySemester(isl, 0, semester1).Items;
 
             // Assert:
             Assert.Equal(3, result0.Count);

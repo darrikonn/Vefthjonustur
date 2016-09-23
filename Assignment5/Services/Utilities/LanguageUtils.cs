@@ -3,6 +3,9 @@ namespace CoursesAPI.Services.Utilities {
     using System.Collections.Generic;
     using Exceptions;
 
+    /// <summary>
+    /// This class represents the language from the accept-language header.
+    /// </summary> 
     public static class LanguageUtils {
         public enum Language {English, Icelandic};
 
