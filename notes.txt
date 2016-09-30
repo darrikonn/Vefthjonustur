@@ -184,12 +184,12 @@ fyrir authentication: baeta vid reference of sma linur i setup.cs
 Etag er notad fyrir caching. Client sendir fyrirspurn a api med etag, ef etagid er til (s.s. engar breytingar), sendir API-inn 304 (not modified) til baka og tha notar clientinn ur cache hja ser.
 
 
-using Microsoft.AspNetCore.Security/Authentication fyrir [Authorize]
+using Microsoft.AspNetCore.Authorization fyrir [Authorize]
 Setja i project.json "IdentityServer4.AccessTokenValidation": "1.0.1-rc1"
 tha geturu baett vid i Startup.cs:
 public Configure(IApplicationBuilder app, ILoggerFactory loggerFactory) {
     loggerFactory.AddConsoleConfiguration.GetSection("Logging"));
-    loggerFactory.AddDebuc();
+    loggerFactory.AddDebug();
 
     app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions {
         Authority = "http://localhost:5000",
@@ -237,6 +237,7 @@ dotnet -c Debug/Release
 
 dev -> test -> prod
 
+use AutoMapper to map between DTO objects and Entity classes
 
 
 
