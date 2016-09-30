@@ -179,6 +179,71 @@ Access token, id token, refresh token
 Til ad kalla i API med token, tha geriru i Http headers->authorization:
 Bearer <tokenCode>
 
+fyrir authentication: baeta vid reference of sma linur i setup.cs
+
+Etag er notad fyrir caching. Client sendir fyrirspurn a api med etag, ef etagid er til (s.s. engar breytingar), sendir API-inn 304 (not modified) til baka og tha notar clientinn ur cache hja ser.
+
+
+using Microsoft.AspNetCore.Security/Authentication fyrir [Authorize]
+Setja i project.json "IdentityServer4.AccessTokenValidation": "1.0.1-rc1"
+tha geturu baett vid i Startup.cs:
+public Configure(IApplicationBuilder app, ILoggerFactory loggerFactory) {
+    loggerFactory.AddConsoleConfiguration.GetSection("Logging"));
+    loggerFactory.AddDebuc();
+
+    app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions {
+        Authority = "http://localhost:5000",
+        ScopeName = "api1",
+        RequireHttpsMetadata = false
+    });
+    app.UseMvc();
+}
+
+I Program.cs baetiru vid i host = new WebHostBuilder()
+    .UseUrls("http://localhost:5001")
+
+mismunandi port! api a port 5000.
+Sja github, Identityserver4
+
+Inni i ConfigureServices(IServiceCollection services) i Startup.cs baeta vid:
+services.AddMvc();
+services.AddAuthorization(options => {
+    options.AddPolicy("IsTeacher", policy => policy.RequireClaim("IsTeacher"));
+});
+
+[Authorize(Policy="IsTeacher")]
+
+yo aspnet
+Web Api Application
+CoursesAuth
+og i project.json kemur "IdentityServer4": "1.0.0-rc1-update2"
+Og i configure fallinu i Startup.json a ad kalla i: app.UseIdentityServer();
+I IdentityServernum: ConfigureServices startup.cs tharf ad kalla i:
+services.AddDeveloperIdentityServer()
+        .AddInMemoryScopes(Config.GetScopes())
+        .AddInMemoryClients(Config.GetClients())
+        .AddInMemoryUsers(Config.GetUsers())
+
+
+vantar dotnet new fyrir console
+C# clasa
+
+var tokenClient = new TokenClient(disco.TokenEndpoint, "ro.client", "secret");
+var tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync("alice", "password", "api1");
+if (tokenResponse.IsError {}
+Console.WriteLine(tokenResponse.Json);
+
+dotnet -c Debug/Release
+
+dev -> test -> prod
+
+
+
+
+
+
+
+
 
 
 
