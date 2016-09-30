@@ -30,8 +30,9 @@ namespace CoursesAPI {
         public void ConfigureServices(IServiceCollection services) {
             services.AddMvc();
             services.AddAuthorization(options => {
-                    options.AddPolicy("IsTeacher", policy => policy.RequireClaim("IsTeacher"));
-                    options.AddPolicy("IsStudent", policy => policy.RequireClaim("IsStudent"));
+                    options.AddPolicy("TeacherOnly", policy => policy.RequireClaim("IsTeacher"));
+                    options.AddPolicy("SchoolMemberOnly", policy => 
+                            policy.RequireClaim("IsStudent", "IsTeacher"));
                 });
         }
 
