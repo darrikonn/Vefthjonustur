@@ -10,7 +10,8 @@ namespace CoursesAuth {
             return new List<Scope> {
                 new Scope {
                     Name = "api1",
-                         Description = "My API"
+                    Description = "My API",
+                    IncludeAllClaimsForUser = true
                 }
             };
         }
@@ -19,20 +20,20 @@ namespace CoursesAuth {
             return new List<InMemoryUser> {
                 new InMemoryUser {
                     Subject = "1",
-                            Username = "alice",
-                            Password = "password",
-                            Claims = new Claim[] {
-                                new Claim("IsTeacher", "true"),
-                            }
-                },
-                    new InMemoryUser {
-                        Subject = "2",
-                        Username = "bob",
-                        Password = "password",
-                        Claims = new Claim[] {
-                            new Claim("IsStudent", "true"),
-                        }
+                    Username = "alice",
+                    Password = "password",
+                    Claims = new Claim[] {
+                        new Claim("IsTeacher", "true"),
                     }
+                },
+                new InMemoryUser {
+                    Subject = "2",
+                    Username = "bob",
+                    Password = "password",
+                    Claims = new Claim[] {
+                        new Claim("IsStudent", "true"),
+                    }
+                }
             };
         }
 
@@ -43,14 +44,14 @@ namespace CoursesAuth {
                 // resource owner password grant client
                 new Client {
                     ClientId = "ro.client",
-                             AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
 
-                             ClientSecrets = new List<Secret> {
-                                 new Secret("secret".Sha256())
-                             },
-                             AllowedScopes = new List<string> {
-                                 "api1"
-                             }
+                    ClientSecrets = new List<Secret> {
+                        new Secret("secret".Sha256())
+                    },
+                    AllowedScopes = new List<string> {
+                        "api1"
+                    }
                 }
             };
         }

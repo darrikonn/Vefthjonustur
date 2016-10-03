@@ -1,8 +1,5 @@
 namespace CoursesAuth {
     using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
@@ -18,8 +15,7 @@ namespace CoursesAuth {
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, 
-                ILoggerFactory loggerFactory) {
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory) {
             loggerFactory.AddConsole(LogLevel.Debug);
             app.UseDeveloperExceptionPage();
 

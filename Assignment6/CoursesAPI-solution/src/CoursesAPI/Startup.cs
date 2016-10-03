@@ -16,7 +16,6 @@ namespace CoursesAPI {
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
             if (env.IsDevelopment()) {
-                // For more details on using the user secret store see https://go.microsoft.com/fwlink/?LinkID=532709
                 builder.AddUserSecrets();
             }
 
@@ -31,8 +30,9 @@ namespace CoursesAPI {
             services.AddMvc();
             services.AddAuthorization(options => {
                     options.AddPolicy("TeacherOnly", policy => policy.RequireClaim("IsTeacher"));
-                    options.AddPolicy("SchoolMemberOnly", policy => 
-                            policy.RequireClaim("IsStudent", "IsTeacher"));
+                    options.AddPolicy("SchoolMemberOnly", policy => policy.RequireAssertion(context =>
+                                  context.User.HasClaim(c => 
+                                      c.Type == "IsTeacher" || c.Type == "IsStudent")));
                 });
         }
 
