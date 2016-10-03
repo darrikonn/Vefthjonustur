@@ -239,9 +239,17 @@ dev -> test -> prod
 
 use AutoMapper to map between DTO objects and Entity classes
 
+Monoliths er eins og vid erum buin ad gera,, bara einn API.
+Microservices splittar thessu upp.
+Ekki nota microservices nema thu sjair ad projectid se ordir rugl stort, tha mattu setja i micros.
 
+Mismunandi service med mismunandi db eiga ad tala vid hvor adra, en ekki vid databaseinn hja hinum.
 
-
+# Javascript
+V name = statement; // where V e {let, const, var}
+let er block scope en var er function scope, s.s. var lifir allstadar inni i falli, en let bara t.d. inni i if setningu.
+Reyna bara ad nota let og const.
+nota toString og parseInt
 
 
 
