@@ -251,8 +251,71 @@ let er block scope en var er function scope, s.s. var lifir allstadar inni i fal
 Reyna bara ad nota let og const.
 nota toString og parseInt
 
+# Punchcard verkefni i node
+--save-dev eru pakkar sem eru naudsynlegir a medan thad er verid ad throa, en ekki thegar thad er keyrt i production, t.d. pakkar fyrir einingaprofanir
+--save mun nota i baedi production og development
+npm init
+npm install express --save
+npm install er eins og dotnet restore
+
+semver:
+^1.2.0 segir allt sem er i major version (1.2.x, 1.1.x, 1.3.x etc.)
+~1.2.0 segir allt sem er i minor version (1.2.1, 1.2.2 etc.)
+0.x.x thydir ad thetta se i beta
+
+# index.js
+const express = require('express');
+const app = express();
+
+// geyma array af object
+const companies = [];
+const users = [];
+
+// route
+app.get('/api/companies', (req, res) => {
+  // res.type('application/json'); // senda fra mer response af thessu tagi
+
+  /*const data = [{
+    id: 1,
+    name: 'Forvit'
+  }, {
+    id: 2,
+    name: 'Smuu'
+  }];
+
+  res.send(data);*/
+
+  // res.send(companies);
+
+  res.json(companies); // sleppum vid content type
+});
+
+app.post('/api/companies', (req, res) => {
+  let newCompany = req.body;
+  let comp = JSON.parse(newCompany);
+  // if (comp.id)
+  companies.push(comp);
+});
+
+app.get('/api/companies/:id', (req, res) => {
+  //let id = parseInt(quotes(req.params.id));
+  let id = parseInt(req.params.id);
+
+  // ef query strengur (GET /search?q=tobi+ferret) tha er haegt ad gera
+  //req.query.q
+
+  if (id >= companies.length || id < 0) {
+    res.statusCode = 404;
+    // and return res.send('error 404, blabla');
+  }
+  res.json(companies[id]);
+});
+
+app.listen(process.env.PORT || 5000);
 
 
+skoda body-parser middleware sem eru hjalpartol
+##############
 
 
 
