@@ -1,4 +1,5 @@
 /* jshint esversion: 6 */
+
 /*
  * author: Darri Steinn Konradsson
  * email: darrik13@ru.is
@@ -30,6 +31,8 @@ const companies = [],
 /********** GETs **********/
 /*
  * GET /api/companies
+ * Examples:
+ *  i) curl -i -X GET localhost:5000/api/companies
  */
 app.get('/api/companies', (req, res) => {
   return res.json(companies);  
@@ -37,6 +40,8 @@ app.get('/api/companies', (req, res) => {
 
 /*
  * GET /api/companies/{id}
+ * Examples:
+ *  i) curl -i -X GET localhost:5000/api/companies/0
  */
 app.get('/api/companies/:id', (req, res) => {
   let id = parseInt(req.params.id);
@@ -50,6 +55,8 @@ app.get('/api/companies/:id', (req, res) => {
 
 /*
  * GET /api/users
+ * Examples:
+ *  i) curl -i -X GET localhost:5000/api/users
  */
 app.get('/api/users', (req, res) => {
   return res.json(users);  
@@ -57,6 +64,10 @@ app.get('/api/users', (req, res) => {
 
 /*
  * GET /api/users/{id}/punches
+ * With possibility of querying: /api/users/{id}/punches?company={cid}
+ * Examples:
+ *  i) curl -i -X GET localhost:5000/api/users/0/punches
+ *  ii) curl -i -X GET localhost:5000/api/users/0/punches?company=1
  */
 app.get('/api/users/:id/punches', (req, res) => {
   let id = parseInt(req.params.id);
@@ -65,6 +76,7 @@ app.get('/api/users/:id/punches', (req, res) => {
     return res.send('404 Not Found: User not found!');
   }
 
+  // get query
   let company = req.query.company;
   if (company) {
     return res.json(users[id].punches.filter((p) => {return p.company == company;}));
@@ -76,11 +88,14 @@ app.get('/api/users/:id/punches', (req, res) => {
 /********** POSTs **********/
 /*
  * POST /api/companies
+ * Examples:
+ *  i) curl -i -X POST -d "name=veft&punchCount=10" localhost:5000/api/companies
+ * Parameters:
+ *  'name' and 'punchCount' are required
  */
 app.post('/api/companies', jsonParser, (req, res) => {
-  // pass in 'name' and 'punchCount'
   let model = req.body;
-  if (!model || !model.name || model.punchCount) {
+  if (!model || !model.name || !model.punchCount) {
     res.statusCode = 412;
     return res.send('412 Precondition Failed: "name" and "punchCount" are required!');
   } else if (!validator.isInt(model.punchCount)) {
@@ -101,9 +116,12 @@ app.post('/api/companies', jsonParser, (req, res) => {
 
 /*
  * POST /api/users
+ * Examples:
+ *  i) curl -i -X POST -d "name=Darri Konn&email=darrik13@ru.is" localhost:5000/api/users
+ * Parameters:
+ *  'name' and 'email' are required
  */
 app.post('/api/users', jsonParser, (req, res) => {
-  // pass in 'name' and 'email'
   let model = req.body;
   if (!model || !model.name || !model.email) {
     res.statusCode = 412;
@@ -127,6 +145,10 @@ app.post('/api/users', jsonParser, (req, res) => {
 
 /*
  * POST /api/users/{id}/punches
+ * Examples:
+ *  i) curl -i -X POST -d "company=1" localhost:5000/api/users/0/punches
+ * Parameters:
+ *  'company' id is required
  */
 app.post('/api/users/:id/punches', jsonParser, (req, res) => {
   let id = parseInt(req.params.id);
