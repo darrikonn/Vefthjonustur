@@ -317,6 +317,150 @@ app.listen(process.env.PORT || 5000);
 skoda body-parser middleware sem eru hjalpartol
 ##############
 
+MongoDB er mjog hradur gagnagrunnur sem scalast vel.
+Nota NoSQL fyrir t.d. chat eda skilabod. Ekki fyrir eitthvad sem a ad vera i rod.
+
+mkdir /tmp/data
+mongod --dbpath /tmp/data
+// keyrir upp eina mongodb nodu
+// haegt ad keyra tiu sem tengjast saman (horizontal scaling) og ef einn deyr tha deyr ekki databaseinn.
+
+i annarri skel keyrir madur:
+mongo       // sem keyrir upp skel
+db
+show dbs        // synir alla databaseana i grunninum
+
+thad er til database, inni i database-i er collection og inni i collection er document
+show collections
+use // til ad tengjast vid database
+use myapp
+db  // synir databaseinn
+db.todos.insert({title: 'Check out socks drawer', created: new Date(), category: 'home'})
+db.todos.count()
+db.todos.find()     // skilar ollum documentum
+for (var i = 0; i < 20; i = i + 1) {
+    db.todos.insert({title: 'Todo ' + i, created: new Date(), category: 'home'});
+}
+
+db.todos.insert({title: 'Read pull request', created: new Date(), category: 'work'});
+db.todos.insert({title: 'Hand in final project', created: new Date(), category: 'school'});
+db.todos.find({'category': 'school'});
+
+db.todos.insert({title: 'Hand in final project', created: new Date(), category: 'school', status: {postponed: false}});
+db.todos.find({'status.postponed': false});
+
+db.users.find({'$or': [{'username': 'bob'}, {'username': 'eve'}]);
+db.users.find({'tags': {'$in': ['bot', 'developer']}});
+
+#### mongo project 
+npm install --save express
+npm install --save mongodb
+npm install --save body-parser
+npm install --save nodemon          <---- *** restartar alltaf servernum ef thad verda breytingar
+keyrir sidan node_modules/nodemon/bin/nodemon.js index.js
+
+'use strict';
+
+const todo = require('./todo'),   // ef eg sleppi . tha leitar hun i node_modules
+      express = require('express'),
+      bodyParser = require('body-parser'),
+      ObjectId = require('mongodb').ObjectID;
+
+const app = express();
+app.use(bodyParser.json());
+
+app.post('/api/todo', (req, res) => {
+  const data = req.body;
+  // validate data
+  console.log(data);
+  todo.addTodo(data, (err, dbrs) => {
+    if (err) {
+      res.status(500).send('Unable to insert todo');
+      return;
+    }
+    res.status(201).send(dbrs.insertedIds[0] || '');
+  );
+});
+
+app.get('/api/todo', (req, res) => {
+  todo.getTodos({}, (err, docs) {
+    console.log(err);
+    console.log(docs);
+    res.send(docs);
+  });
+});
+
+app.get('/api/todo/:id', (req, res) => {
+  const id = req.params.id;
+  todo.getTodos({'_id': new ObjectID(id)}, (err, docs) {
+    console.log(err);
+    console.log(docs);
+    res.send(docs[0]);
+  });
+});
+
+app.listen(4000);
+
+
+i todo.js:
+'use strict';
+const MongoClient = require('mongodb').MongoClient;
+const url = 'mongodb://localhost:27017/myapp';
+
+const getTodos = (query, cb) => {
+  MongoClient.connect(url, (err, db) => {
+    if (err) {
+      cb(err);
+      db.close();
+      return;
+    }
+
+// lika til findOne fyrir GET id
+    const collection = db.collection('todo');
+    collection.find(query).toArray((ierr, docs) => {
+      cb(null, docs);
+      db.close();
+    });
+
+  }
+};
+
+const addTodo = (todo, cb) => {
+  MongoClient.connect(url, (err, db) => {
+    if (err) {
+      cb(err);
+      db.close();
+      return;
+    }
+
+    const collection = db.collection('todo');
+    collection.insert(todo, (ierr, res) => {
+      if (ierr) {
+        cb(ierr);
+        db.close();
+        return;
+      }
+      cb(null, res);
+    });
+  });
+}
+
+module.exports = {
+  addTodo: addTodo,
+  getTodos: getTodos
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
