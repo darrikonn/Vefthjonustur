@@ -451,12 +451,142 @@ module.exports = {
 }
 
 
+##### ass8
+nota uuid packa sem generate-ar token
+ma hardkoda admin token
+(nota yarn)
+npm install --save express
+#############index.js
+const express = require("express");
+const mongoose = require("mongoose");
+const app = express();
+const api = require("./api");
+const port = 4000;
+
+app.use("/api", api); // og tha get eg slept /api
+
+//mongoose.connect("mongodb://localhost:27017/punchapi");
+//mongoose.connect("localhost/punchapi");
+mongoose.connection.once("open", () => {
+    console.log("Connected to database");
+    app.listen(port, () => {
+        console.log("Web server started on port " + port);   
+    });
+});
+
+###############api.js
+const express = require("express");
+const entities = require("./entities");
+const uuid = require("node-uuid");
+const app = export();
+const adminToken = "smuu";
 
 
+app.get("/api/users", (req, res) => {
+    entities.User.find(function(err, docs) {
+        if (err) {
+            return res.status(500).send(err);
+        } else {
+            //TODO: henda token burt!
+        }
+    }); 
+});
 
+app.get("/api/users:id", (req, res) => {
+    var query = {
+        _id: req.params.id
+    };
+    //entities.User.find(query);
+});
 
+api.post("/api/users", (req, res) => {
+    if (req.headers.Authorization !== adminToken) {
+        return res.status(401).send("Not authorized";
+    }
+    // uuid.v1();
+    
+    let data = {
+        name: req.body.name,
+        gender: req.body.gender,
+        token: uuid.v1()
+    };
 
+    let entity = new entities.User(data);   // byr til instance i minni
+    entity.save((err) => {
+        if (err) {
+            return res.status(412).send("precondition failed");
+        } else {
+            return res.status(201).send({
+                _id: entity._id,
+                token: data.token
+            });
+        }
+    });
+});
 
+app.get("/my/punches", (req, res) => {
+    const token = req.headers.Authorization;
+    var query = {
+        token: token
+    };
+    let user = entities.User.find(query, (err, doc) => { //use find one instead
+        console.log(doc);   
+        if (doc.length !== 1) {
+            
+        }
+    });
+});
+
+module.exports {
+};
+
+module.export = app;
+
+############entities.js npm install --save mongoose
+const mongoose = require("mongoose");
+
+const UsersSchema = new mongoose.Schema({
+    //name: String,
+    name: {
+        type: String,
+        required: true
+    },
+    token: String,
+    gender: {
+        type: String,
+        validate: {
+            validator: function(value) {
+                if (value === "m" || value === "f" || value === "o") return true;
+                return false;
+            },
+            message: "blabla"
+        }
+    },
+    bla: {
+        type: Number,
+        min: [10, "Why no"],
+        max: 11
+    },
+    drink: {
+        type: String,
+        enum: ["Coffee", "Tea"]
+    }
+    // Number, Date, Buffer, Boolean, Mixed, ObjectId, Array
+});
+
+const PunchSchema = new mongoose.Schema({
+    created: {
+        type: Date,
+        default: new Date()
+    }
+});
+
+const UserEntity = mongoose.model("Users", UsersSchema);
+
+const entities = {
+    User: UserEntity
+};
+module.export = entities;
 
 
 
