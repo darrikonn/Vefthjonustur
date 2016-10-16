@@ -21,18 +21,22 @@ const Schema = mongoose.Schema,
  * Schemas
  */
 const userSchema = Schema({
-  name: String,
+  name: {
+    type: String,
+    required: true
+  },
   token: {
     type: String,
     required: true
   },
   gender: {
     type: String,
+    required: true,
     validate: {
       validator: (val) => {
         return val == 'm' || val == 'f' || val == 'o';
       },
-      message: '{VALUE} is not a valid gender. Please use "m" (male), "f" (female) or "o" (other).'
+      message: '`{VALUE}` is not a valid gender. Please use `m` (male), `f` (female) or `o` (other).'
     }
   }
 });

@@ -49,9 +49,7 @@ router.get('/companies', (req, res) => {
  */
 router.get('/companies/:id', (req, res) => {
   services.getCompany({'_id': req.params.id}, (err, docs) => {
-    if (err) {
-      return res.status(404).send('Invalid ObjectId, and therefore the company is not found!');
-    } else if (docs === null) {
+    if (err || docs === null) {
       return res.status(404).send('Company not found!');
     }
 
@@ -82,7 +80,7 @@ router.get('/users', (req, res) => {
  *  i)
  */
 router.post('/companies', jsonParser, (req, res) => {
-  if (req.headers.authorization.split(' ')[1] !== adminToken) {
+  if (req.headers.authorization !== adminToken) {
     return res.status(401).send('Not Authorized');
   }
 
@@ -100,7 +98,7 @@ router.post('/companies', jsonParser, (req, res) => {
  *  i)
  */
 router.post('/users', jsonParser,(req, res) => {
-  if (req.headers.authorization.split(' ')[1] !== adminToken) {
+  if (req.headers.authorization !== adminToken) {
     return res.status(401).send('Not Authorized');
   }
 
@@ -108,7 +106,7 @@ router.post('/users', jsonParser,(req, res) => {
     if (err) {
       return res.status(err.status).send(err.message);
     }
-    return res.status(201).send(dbres);
+    return res.status(201).json(dbres);
   });
 });
 
@@ -118,7 +116,41 @@ router.post('/users', jsonParser,(req, res) => {
  *  i)
  */
 router.post('/my/punches', jsonParser, (req, res) => {
+  services.getUser({'token': req.headers.authorization}, (uerr, user) => {
+    if (uerr) {
+      return res.status(401).send('Not Authorized');
+    }
+    
+    services.getCompany({'_id': req.body.id}, (cerr, company) => {
+      if (cerr || company === null) {
+        return res.status(404).send('Company not found!');
+      }
 
+      services.getPunches({'company_id': req.body.id, 
+          'user_id': user._id, 'used': false}, (perr, punches) => {
+        if (perr) {
+          return res.status(500).send('Unable to get punches due to an unknown error!');
+        }
+
+        if (punches.length === company.punchCount-1) {
+          services.markPunches(punches, (merr, dbmres) => {
+            if (merr) {
+              return res.status(500).send('Unable to mark punches due to an unknown error!');
+            }
+            return res.json({'discount': true});
+          });
+          
+        }
+
+        services.addPunch(user._id, req.body, (err, dbpres) => {
+          if (err) {
+            return res.status(err.status).send(err.message);
+          }
+          return res.status(201).json(dbpres);
+        });
+      });
+    });
+  });
 });
 
 /*
