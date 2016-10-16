@@ -49,7 +49,7 @@ const companySchema = Schema({
   punchCount: {
     type: Number,
     default: 10,
-    min: [0, 'Minimum count is 0.']
+    min: [1, 'Minimum count is 1.']
   }
 });
 

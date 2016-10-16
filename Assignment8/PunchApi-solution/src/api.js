@@ -77,7 +77,8 @@ router.get('/users', (req, res) => {
 /*
  * POST: /api/companies
  * Examples:
- *  i)
+ *  i) curl -i -H "Authorization: WubbaLubbaDubDub" -d "name=TeOgKaffi&punchCount=2" -X POST localhost:5000/api/companies
+ * Returns: HTTP status code 201 with the company id.
  */
 router.post('/companies', jsonParser, (req, res) => {
   if (req.headers.authorization !== adminToken) {
@@ -95,7 +96,8 @@ router.post('/companies', jsonParser, (req, res) => {
 /*
  * POST: /api/users
  * Examples:
- *  i)
+ *  i) curl -i -H "Authorization: WubbaLubbaDubDub" -d "name=Darri Steinn&gender=m" -X POST localhost:5000/api/users
+ * Returns: HTTP status code 201 along with the id and token of the user
  */
 router.post('/users', jsonParser,(req, res) => {
   if (req.headers.authorization !== adminToken) {
@@ -113,11 +115,13 @@ router.post('/users', jsonParser,(req, res) => {
 /*
  * POST: /api/my/punches
  * Examples:
- *  i)
+ *  i) curl -i -H "Authorization: 1" -d "id=1" -X POST localhost:5000/api/my/punches
+ * Returns: {discount: true} if total punches equal the puncCount of the company,
+ *  else if returns HTTP status code 201 along with the punch id.
  */
 router.post('/my/punches', jsonParser, (req, res) => {
   services.getUser({'token': req.headers.authorization}, (uerr, user) => {
-    if (uerr) {
+    if (uerr || user === null) {
       return res.status(401).send('Not Authorized');
     }
     
@@ -126,27 +130,30 @@ router.post('/my/punches', jsonParser, (req, res) => {
         return res.status(404).send('Company not found!');
       }
 
-      services.getPunches({'company_id': req.body.id, 
-          'user_id': user._id, 'used': false}, (perr, punches) => {
-        if (perr) {
-          return res.status(500).send('Unable to get punches due to an unknown error!');
+      services.addPunch(user._id, req.body, (err, dbpres) => {
+        if (err) {
+          return res.status(err.status).send(err.message);
         }
 
-        if (punches.length === company.punchCount-1) {
-          services.markPunches(punches, (merr, dbmres) => {
-            if (merr) {
-              return res.status(500).send('Unable to mark punches due to an unknown error!');
-            }
-            return res.json({'discount': true});
-          });
-          
-        }
-
-        services.addPunch(user._id, req.body, (err, dbpres) => {
-          if (err) {
-            return res.status(err.status).send(err.message);
+        // if the total amount of non-used punches if equal the company's punchCount,
+        // then mark the punches as used and return discount true.
+        services.getPunches({'company_id': req.body.id, 'user_id': user._id, 'used': false}, 
+            (perr, punches) => {
+          if (perr) {
+            return res.status(500).send('Unable to get punches due to an unknown error!');
           }
-          return res.status(201).json(dbpres);
+
+          if (punches.length === company.punchCount) {
+            services.markPunches(punches, (merr, dbmres) => {
+              if (merr) {
+                return res.status(500).send('Unable to mark punches due to an unknown error!');
+              }
+
+              return res.json(dbmres);
+            });
+          } else {
+            return res.status(201).json(dbpres);
+          }
         });
       });
     });

@@ -14,10 +14,6 @@ const uuid = require('node-uuid'),
       entities = require('./entities');
 
 /*
- * Application setup
- */
-
-/*
  * Services
  */
 const getCompanies = (cb) => {
@@ -78,7 +74,6 @@ const addCompany = (model, cb) => {
 
   company.save((err) => {
     if (err) {
-    console.log(err);
       if (err.name === 'ValidationError') {
         return cb({'status': 412, 'message': Object.keys(err.errors).map(e => 
               err.errors[e].message)});
@@ -130,7 +125,14 @@ const addPunch = (id, model, cb) => {
 };
 
 const markPunches = (punches, cb) => {
-  
+  entities.Punches.update({'_id': {'$in': punches.map(p => p._id)}}, {'used': true}, {multi: true}, 
+      (err) => {
+    if (err) {
+      return cb(err);
+    }
+
+    return cb(null, {'discount': true});
+  });
 };
 
 /*
