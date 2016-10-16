@@ -11,15 +11,15 @@
  */
 const express = require('express'),
       bodyParser = require('body-parser'),
-      ObjectId = require('mongoose').Schema.ObjectId,
-      services = require('./services.js');
+      services = require('./services');
 
 /*
  * Application setup
  */
-const app = express(),
-      jsonParser = bodyParser.json();
-app.use(bodyParser.urlencoded({ extended: false }));
+const router = express.Router(),
+      jsonParser = bodyParser.json(),
+      adminToken = 'WubbaLubbaDubDub';
+router.use(bodyParser.urlencoded({ extended: false }));
 
 /*
  * Api routes
@@ -28,46 +28,50 @@ app.use(bodyParser.urlencoded({ extended: false }));
 /*
  * GET: /api/companies
  * Examples: 
- *  i) 
+ *  i) curl -i -X GET localhost:5000/api/companies
+ * Returns: a list of all the companies
  */
-app.get('/api/companies', (req, res) => {
+router.get('/companies', (req, res) => {
   services.getCompanies((err, docs) => {
     if (err) {
-      return res.status(500).send('Unable to get companies');
+      return res.status(500).send('Unable to get companies due to an unknown error!');
     }
 
-    res.send(docs);
+    return res.json(docs);
   });
 });
 
 /*
  * GET: /api/companies/{id}
  * Examples: 
- *  i) 
+ *  i) curl -i -X GET localhost:5000/api/companies/1
+ * Returns: a company with the given id
  */
-app.get('/api/companies/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  services.getCompany({'_id': new ObjectId(id)}, (err, docs) => {
+router.get('/companies/:id', (req, res) => {
+  services.getCompany({'_id': req.params.id}, (err, docs) => {
     if (err) {
-      return res.status(500).send('Unable to get company');
+      return res.status(404).send('Invalid ObjectId, and therefore the company is not found!');
+    } else if (docs === null) {
+      return res.status(404).send('Company not found!');
     }
 
-    res.send(docs);
+    return res.json(docs);
   });
 });
 
 /*
  * GET: /api/users
  * Examples: 
- *  i) 
+ *  i) curl -i -X GET localhost:5000/api/users
+ * Returns: a list of all users
  */
-app.get('/api/users', (req, res) => {
-  services.Users((err, docs) => {
+router.get('/users', (req, res) => {
+  services.getUsers((err, docs) => {
     if (err) {
-      return res.status(500).send('Unable to get users');
+      return res.status(500).send('Unable to get users due to an unknown error!');
     }
 
-    res.send(docs);
+    return res.json(docs);
   });
 });
 
@@ -77,8 +81,17 @@ app.get('/api/users', (req, res) => {
  * Examples:
  *  i)
  */
-app.post('/api/companies', (req, res) => {
+router.post('/companies', jsonParser, (req, res) => {
+  if (req.headers.authorization.split(' ')[1] !== adminToken) {
+    return res.status(401).send('Not Authorized');
+  }
 
+  services.addCompany(req.body, (err, dbres) => {
+    if (err) {
+      return res.status(err.status).send(err.message);
+    }
+    return res.status(201).json(dbres);
+  });
 });
 
 /*
@@ -86,8 +99,17 @@ app.post('/api/companies', (req, res) => {
  * Examples:
  *  i)
  */
-app.post('/api/users', (req, res) => {
+router.post('/users', jsonParser,(req, res) => {
+  if (req.headers.authorization.split(' ')[1] !== adminToken) {
+    return res.status(401).send('Not Authorized');
+  }
 
+  services.addUser(req.body, (err, dbres) => {
+    if (err) {
+      return res.status(err.status).send(err.message);
+    }
+    return res.status(201).send(dbres);
+  });
 });
 
 /*
@@ -95,11 +117,11 @@ app.post('/api/users', (req, res) => {
  * Examples:
  *  i)
  */
-app.post('/api/my/punches', (req, res) => {
+router.post('/my/punches', jsonParser, (req, res) => {
 
 });
 
 /*
  * Exports
  */
-module.export = app;
+module.exports = router;

@@ -465,7 +465,7 @@ const port = 4000;
 
 app.use("/api", api); // og tha get eg slept /api
 
-//mongoose.connect("mongodb://localhost:27017/punchapi");
+mongoose.connect("mongodb://localhost:27017/punchapi");
 //mongoose.connect("localhost/punchapi");
 mongoose.connection.once("open", () => {
     console.log("Connected to database");
@@ -478,7 +478,7 @@ mongoose.connection.once("open", () => {
 const express = require("express");
 const entities = require("./entities");
 const uuid = require("node-uuid");
-const app = export();
+const app = export.Route();
 const adminToken = "smuu";
 
 

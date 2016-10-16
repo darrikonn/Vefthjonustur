@@ -15,12 +15,12 @@ const mongoose = require('mongoose');
  * Application setup
  */
 const Schema = mongoose.Schema,
-      ObjectId = Schema.ObjectId;
+      ObjectId = Schema.Types.ObjectId;
 
 /*
  * Schemas
  */
-const userSchema = new Schema({
+const userSchema = Schema({
   name: String,
   token: {
     type: String,
@@ -32,17 +32,20 @@ const userSchema = new Schema({
       validator: (val) => {
         return val == 'm' || val == 'f' || val == 'o';
       },
-      message: 'Gender not valid. Valid types are "m" (male), "f" (female) or "o" (other).'
+      message: '{VALUE} is not a valid gender. Please use "m" (male), "f" (female) or "o" (other).'
     }
   }
 });
 
-const companySchema = new Schema({
-  name: String,
+const companySchema = Schema({
+  name: {
+    type: String,
+    required: true
+  },
   punchCount: {
     type: Number,
     default: 10,
-             min: [0, 'Minimum count is 0.']
+    min: [0, 'Minimum count is 0.']
   }
 });
 
@@ -57,7 +60,7 @@ const punchSchema = new Schema({
   },
   created: {
     type: Date,
-    default: new Date()
+    default: Date.now
   },
   used: {
     type: Boolean,
@@ -69,7 +72,7 @@ const punchSchema = new Schema({
  * Exports
  */
 module.exports = {
-  Users: mongoose.model("Users", userSchema),
-  Companies: mongoose.model("Companies", companySchema),
-  Punches: mongoose.model("Punches", punchSchema)
+  Users: mongoose.model('Users', userSchema),
+  Companies: mongoose.model('Companies', companySchema),
+  Punches: mongoose.model('Punches', punchSchema)
 };
