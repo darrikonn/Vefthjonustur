@@ -34,7 +34,7 @@ router.use(bodyParser.urlencoded({ extended: false }));
 router.get('/companies', (req, res) => {
   services.getCompanies((err, docs) => {
     if (err) {
-      return res.status(500).send('Unable to get companies due to an unknown error!');
+      return res.status(500).json({'error': 'Unable to get companies due to an unknown error!'});
     }
 
     return res.json(docs);
@@ -50,7 +50,7 @@ router.get('/companies', (req, res) => {
 router.get('/companies/:id', (req, res) => {
   services.getCompany({'_id': req.params.id}, (err, docs) => {
     if (err || docs === null) {
-      return res.status(404).send('Company not found!');
+      return res.status(404).json({'error': 'Company not found!'});
     }
 
     return res.json(docs);
@@ -66,7 +66,7 @@ router.get('/companies/:id', (req, res) => {
 router.get('/users', (req, res) => {
   services.getUsers((err, docs) => {
     if (err) {
-      return res.status(500).send('Unable to get users due to an unknown error!');
+      return res.status(500).json({'error': 'Unable to get users due to an unknown error!'});
     }
 
     return res.json(docs);
@@ -82,12 +82,12 @@ router.get('/users', (req, res) => {
  */
 router.post('/companies', jsonParser, (req, res) => {
   if (req.headers.authorization !== adminToken) {
-    return res.status(401).send('Not Authorized');
+    return res.status(401).json({'error': 'Not Authorized'});
   }
 
   services.addCompany(req.body, (err, dbres) => {
     if (err) {
-      return res.status(err.status).send(err.message);
+      return res.status(err.status).json(err.message);
     }
     return res.status(201).json(dbres);
   });
@@ -101,12 +101,12 @@ router.post('/companies', jsonParser, (req, res) => {
  */
 router.post('/users', jsonParser,(req, res) => {
   if (req.headers.authorization !== adminToken) {
-    return res.status(401).send('Not Authorized');
+    return res.status(401).json({'error': 'Not Authorized'});
   }
 
   services.addUser(req.body, (err, dbres) => {
     if (err) {
-      return res.status(err.status).send(err.message);
+      return res.status(err.status).json(err.message);
     }
     return res.status(201).json(dbres);
   });
@@ -122,17 +122,17 @@ router.post('/users', jsonParser,(req, res) => {
 router.post('/my/punches', jsonParser, (req, res) => {
   services.getUser({'token': req.headers.authorization}, (uerr, user) => {
     if (uerr || user === null) {
-      return res.status(401).send('Not Authorized');
+      return res.status(401).json({'error': 'Not Authorized'});
     }
     
     services.getCompany({'_id': req.body.id}, (cerr, company) => {
       if (cerr || company === null) {
-        return res.status(404).send('Company not found!');
+        return res.status(404).json({'error': 'Company not found!'});
       }
 
       services.addPunch(user._id, req.body, (err, dbpres) => {
         if (err) {
-          return res.status(err.status).send(err.message);
+          return res.status(err.status).json(err.message);
         }
 
         // if the total amount of non-used punches if equal the company's punchCount,
@@ -140,13 +140,13 @@ router.post('/my/punches', jsonParser, (req, res) => {
         services.getPunches({'company_id': req.body.id, 'user_id': user._id, 'used': false}, 
             (perr, punches) => {
           if (perr) {
-            return res.status(500).send('Unable to get punches due to an unknown error!');
+            return res.status(500).json({'error': 'Unable to get punches due to an unknown error!'});
           }
 
           if (punches.length === company.punchCount) {
             services.markPunches(punches, (merr, dbmres) => {
               if (merr) {
-                return res.status(500).send('Unable to mark punches due to an unknown error!');
+                return res.status(500).json({'error': 'Unable to mark punches due to an unknown error!'});
               }
 
               return res.json(dbmres);
