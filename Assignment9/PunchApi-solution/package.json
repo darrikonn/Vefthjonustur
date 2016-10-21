@@ -1,0 +1,33 @@
+{
+  "name": "punchapi",
+  "version": "1.0.0",
+  "description": "Api for punch cards, connected with mongodb",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "darrikonn"
+  },
+  "keywords": [
+    "yarn",
+    "mongodb",
+    "nodejs",
+    "express"
+  ],
+  "author": "darrikonn",
+  "license": "MIT",
+  "dependencies": {
+    "amqplib": "^0.4.2",
+    "body-parser": "^1.15.2",
+    "child_process": "^1.0.2",
+    "express": "^4.14.0",
+    "gulp": "^3.9.1",
+    "gulp-jshint": "^2.0.1",
+    "jshint": "^2.9.3",
+    "jshint-stylish": "^2.2.1",
+    "mongoose": "^4.6.3",
+    "node-uuid": "^1.4.7"
+  }
+}

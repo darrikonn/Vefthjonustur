@@ -589,9 +589,42 @@ const entities = {
 module.export = entities;
 
 
+###################
+Notum message queues svo thad se ekki bara haegt ad tala vid thad af fyrra bragdi. Haegt ad lata adra vita hvad er ad gerast.
+IActionResult AddPunch() {
+    var message = {
+        company: {
+            id: 7,
+            name: bla
+        },
+        customer: {}
+    };
+
+    var key = "punch.add";
+}
+Notum RabbitMQ i thetta. (Lika til kafka)
+
+//
+var key = "#"; // eg hef ahuga a ollum skilabodum
+var key = "*.orange.#"; // Allt sem er...
+
+npm init
+npm install --save amqplib
+#####index.js (publisher)
+sja rabbitmq
+var ex = 'punchcardApi';
+var key = (args.length > 0) ? args[0] : 'punch.add';
 
 
+#### index.js (subscriber)
+var args = ['punch.add']
+var ex = 'punchcardAPI';
+
+5 Topics er JavaScript a rabbitmq
+
+var key = "courses.lectures.add";
+var key = "courses.discussions.reply";
 
 
-
+Use NBuilder to generate test data.
 

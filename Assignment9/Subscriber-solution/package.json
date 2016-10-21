@@ -1,0 +1,25 @@
+{
+  "name": "subscriber-solution",
+  "version": "1.0.0",
+  "description": "RabbitMQ subscriber",
+  "main": "src/subscriber.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "darrikonn"
+  },
+  "keywords": [
+    "rabbitmq"
+  ],
+  "author": "darrikonn",
+  "license": "MIT",
+  "dependencies": {
+    "amqplib": "^0.4.2",
+    "child_process": "^1.0.2",
+    "gulp": "^3.9.1",
+    "gulp-jshint": "^2.0.1",
+    "jshint-stylish": "^2.2.1"
+  }
+}
