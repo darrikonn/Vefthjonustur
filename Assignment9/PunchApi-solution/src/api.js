@@ -181,7 +181,7 @@ router.post('/my/punches', jsonParser, (req, res) => {
             });
           } else {
             // place event to the message queue
-            message.unusedPunches = company.punchCount - punches.length;
+            message.unusedPunches = punches.length;
             publisher.send('punchcardapi.punch.add', message);
 
             return res.status(201).json(dbpres);
