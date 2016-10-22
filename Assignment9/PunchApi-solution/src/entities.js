@@ -64,7 +64,7 @@ const punchSchema = new Schema({
   },
   created: {
     type: Date,
-    default: Date.now
+    default: Date.now()
   },
   used: {
     type: Boolean,

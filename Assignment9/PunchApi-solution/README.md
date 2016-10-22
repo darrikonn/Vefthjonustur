@@ -1,7 +1,8 @@
-# Assignment 8
-In this project we continue building our API and here we include a data-store, namely MongoDB. We also do minor changes to the API from project 7.
+# Assignment 9
+In this project we add a publisher and a subscriber to the previous assignment.
 
 ## Setup
+Make sure to run first the subscriber in the Subscriber-solution, read the markdown file. <br/>
 Run `npm install` (or `yarn install` if you're cool) from the source.
 
 ## Run

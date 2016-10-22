@@ -11,7 +11,9 @@
  */
 const express = require('express'),
       bodyParser = require('body-parser'),
-      services = require('./services');
+      dateFormat = require('dateformat'),
+      services = require('./services'),
+      publisher = require('./publisher');
 
 /*
  * Application setup
@@ -108,13 +110,16 @@ router.post('/users', jsonParser,(req, res) => {
     if (err) {
       return res.status(err.status).json(err.message);
     }
-    // TODO: place event to the message queue
-    let message = {
-      'name': '',
-      'gender': '',
-      '_id': '',
-      'created': ''
+
+    // place event to the message queue
+    const message = {
+      'name': req.body.name,
+      'gender': req.body.gender,
+      '_id': dbres._id,
+      'created': dateFormat(Date.now())
     };
+    publisher.send('punchcardapi.user.add', message);
+
     return res.status(201).json(dbres);
   });
 });
@@ -150,42 +155,35 @@ router.post('/my/punches', jsonParser, (req, res) => {
             return res.status(500).json({'error': 'Unable to get punches due to an unknown error!'});
           }
 
+          let message = {
+            'user': {
+              'name': user.name,
+              '_id': user._id
+            },
+            'company': {
+              'name': company.name,
+              '_id': company._id,
+              'punchCount': company.punchCount
+            },
+            'created': dateFormat(Date.now())
+          };
+
           if (punches.length === company.punchCount) {
             services.markPunches(punches, (merr, dbmres) => {
               if (merr) {
                 return res.status(500).json({'error': 'Unable to mark punches due to an unknown error!'});
               }
 
-              // TODO: place event to the message queue
-              let message = {
-                'user': {
-                  'name': '',
-                  '_id': ''
-                },
-                'company': {
-                  'name': '',
-                  '_id': '',
-                  'punchCount': ''
-                },
-                'created': ''
-              };
+              // place event to the message queue
+              publisher.send('punchcardapi.punch.discount', message);
+
               return res.json(dbmres);
             });
           } else {
-            // TODO: place event to the message queue
-            let message = {
-              'user': {
-                'name': '',
-                '_id': ''
-              },
-              'company': {
-                'name': '',
-                '_id': '',
-                'punchCount': ''
-              },
-              'created': '',
-              'unusedPunches': ''
-            };
+            // place event to the message queue
+            message.unusedPunches = company.punchCount - punches.length;
+            publisher.send('punchcardapi.punch.add', message);
+
             return res.status(201).json(dbpres);
           }
         });

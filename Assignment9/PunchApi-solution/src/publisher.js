@@ -8,38 +8,34 @@ const amqp = require('amqplib/callback_api');
 /*
  * Application setup
  */
-const keys = ['punch.addUser', 'punch.addPunch', 'punch.discount'];
+const ex = 'punchcardApi';
 
 /*
- * Publisher
+ * Publisher using topic
  */
-// queue
-/*amqp.connect('amqp://localhost', (err, conn) => {
-  conn.createChannel((err, ch) => {
-    const q = 'punchcardApi';
-    let msg = process.argv.slice(2).join(' ') || "Hello World!";
+const send = (key, msg) => {
+  amqp.connect('amqp://localhost', (err, conn) => {
+    if (err) {
+      console.log('Couldn\'t connect to the amqp server');
+      return;
+    }
 
-    ch.assertQueue(q, {durable: true});
-    ch.sendToQueue(q, new Buffer(msg), {persistent: true});
-    console.log(" [x] Sent '%s'", msg);
+    conn.createChannel((err, ch) => {
+      if (err) {
+        console.log('Couldn\'t create a channel');
+        return;
+      }
+
+      ch.assertExchange(ex, 'topic', {durable: false});
+      ch.publish(ex, key, new Buffer(JSON.stringify(msg)));
+    });
+  
+    setTimeout(() => {
+      conn.close();
+    }, 500);
   });
-  setTimeout(() => { conn.close(); process.exit(0) }, 500);
-});*/
-
-// topic
-const send = amqp.connect('amqp://localhost', (err, conn) => {
-  conn.createChannel((err, ch) => {
-    const ex = 'punchcardApi';
-    var msg = 'Hello World!';
-
-    ch.assertExchange(ex, 'topic', {durable: false});
-    ch.publish(ex, keys[0], new Buffer(msg));
-    console.log(" [x] Sent %s:'%s'", keys[0], msg);
-  });
-
-  setTimeout(() => { conn.close(); process.exit(0) }, 500);
-});
+};
 
 module.exports = {
   send
-}
+};
