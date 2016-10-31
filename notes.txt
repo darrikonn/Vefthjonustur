@@ -628,3 +628,217 @@ var key = "courses.discussions.reply";
 
 Use NBuilder to generate test data.
 
+
+elasticsearch t.d. autocomplete
+setja cluster.name: foobarninja      # i elasticsearch.yml lina 17
+curl http://localhost:9200
+curl http://localhost:9200/_cat
+curl http://localhost:9200/_cat/count
+curl http://localhost:9200/_cat/count\?v
+curl http://localhost:9200/_cat/health
+curl http://localhost:9200/_cat/health\?v
+
+
+thegar madur skrifar i mongo, tha skrifar madur lika i ES (elasticsearch)... frumgogn i mongo, og onnur skrifur i es
+
+curl -X POST http://localhost:9200/feeds
+curl http://localhost:9200/_cat/indices
+curl http://localhost:9200/_cat/indices\?v
+curl -X POST http://localhost:9200/feeds/feed/dcbf12131312kl12312jg312k3g123 -d '{gognin}'
+curl -X POST http://localhost:9200/feeds/feed/_mapping
+curl -X POST http://localhost:9200/feeds/feed/_mapping\?pretty\=true
+uppfaerir med thvi ad gera aftur sama post
+getur deletead ollu ef thu skilgreinir ekki id
+
+indexa document, eyda index af documenti
+query dsl
+curl http://localhost:9200/feeds/feed/_search?q\="handle"
+curl http://localhost:9200/feeds/feed/_search?q\="*"        // leita af ollu
+query with post
+curl -X POST http://localhost:9200/feeds/feed/_search -d '{"query": {"match_all": {}}}'
+curl -X POST http://localhost:9200/feeds/feed/_search -d '{"query": {"match": {"wall_id": "123"}}}'
+curl -X POST http://localhost:9200/feeds/feed/_search -d '{"query": {"bool": {"must: [{"match": {"wall": "123"},
+                                                                                    {"match": {"author": "22"}}}]}}}'
+curl -X POST http://localhost:9200/feeds/feed/_search -d '{"query": {"bool": {"must: {"match": {"wall": "123"}}, 
+                                                                    "filter": {
+                                                                        "range": {
+                                                                            "created": {"gte": "2015-"}.
+                                                                            "like_counter": {"gte": 4}}}}}}
+
+
+
+npm install --save body-parser
+npm install --save elasticsearch
+
+const express = require('express'),
+      bodyParser = require('body-parser'),
+      elasticsearch = require('elasticsearch');
+const port = 4000,
+      app = express();
+
+const client = new elasticsearch.Client({
+    host: 'localhost:9200',
+    log: 'error'
+});
+
+app.post('/api/feed/:wall_id', bodyParser.json(), (req, res) => {
+  // insert to database, if success then add to search index
+  const wallId = req.params.wall_id;
+  const author_id = uuid.v4();
+  const postId = uuid.v4();
+  const content = req.body.content;
+  const created = new Date();
+  const likeCounter = 0;
+
+  const data = {
+    'wall_id': wall_id,
+    'author_id': author_id,
+    'post_id': postId,
+    'content': content,
+    'created': created,
+    'like_counter': likeCounter
+  };
+
+  const promise = client.index({
+    'index': 'feeds',
+    'type': 'feed',
+    'id': postId,
+    'body': data
+  });
+
+  promise.then((doc) => {
+    res.send(doc);
+  }, (err) => {
+    res.status(500).send(err);
+  });
+});
+
+app.get('/api/feeds/:wall_id', (req, res) => {
+    const page = req.query.page || 0;
+    const size = req.query.size || 10;
+    const wallId = req.params.wall_id;
+
+    const promise = client.search({
+        'index': 'feeds',
+        'type': 'feed',
+        'size': size,
+        'from': page,
+        'body': {
+            'query': {
+              'match': {
+                'wall_id': wallId
+              }
+            }
+        }
+    });
+
+    promise.then((doc) => {
+        res.send(doc.hits.hits.map((d) => d._source));
+    }, (err) => {
+        res.status(500).send(err);    
+    });
+});
+
+
+// api.js
+const elasticsearch = require('elasticsearch');
+
+const authenticateAdmin = (req) => {
+    return req.headers['admin_token'] === ADMIN_TOKEN;
+};
+
+const validateDatatype = (req) =? {
+    return req.get('Content-Type') === CONTENT_TYPE;
+};
+
+const client = new elasticsearch.Client({
+    host: 'localhost:9200',
+    log: 'error'
+});
+
+client.update({
+    index: 'companies',
+    type: 'company',
+    id: String(req.params.id),
+    body: {
+        doc: {
+            title: updatedData.title,
+            desciption: updatedData.description,
+            url: updatedData.url
+        }
+    }
+}).then((doc) => {
+
+}, (err) => {
+
+});
+
+
+
+###### Docker
+Lightweight virtual velar
+Share-ar kjarnanum med undir styrikerfinu
+UNION
+docker-machine
+docker-machine create --driver virtualbox default   // tharf ekki driver a linux
+docker-machine ls
+docker-machine env default    // eg er minn eigin default, gefa mer environment breytur
+docker ps // synir alla containerana
+a docker hub er til fullt af image-um sem adrir geta notad
+docker pull mongo   // checkar hvort hun er til locally, annars downloadar hun fra docker hub
+debian er linux distro
+docker images // er listi af imageum
+docker run mongo:latest
+
+onnur skel
+docker exec -ti 3d66 /bin/bash
+
+docker run ubuntu:14.04
+
+ef eg by til hugbunad, i akvednu distro, tha get eg shippad image med til costumer og hann tharf bara ad gera docker run
+docker run -d -p 27017:27017 mongo
+docker pull redis
+
+hver lina er layer
+Tokum alla layera, UNIONum tha saman og thad skraarkerfi sem vid faum ut ur thvi, er thessi skra sem vid visum i
+Ef thu ert ad installa morgun pokkum, tha viltu gera thad a einum layer
+
+npm init --force
+npm install --save express
+mkdir src
+index.js:
+'use strict';
+const express = require('express');
+const app = express();
+
+app.get('/*', (req, res) => {
+  res.send('hello world');
+});
+
+app.listen(4000, () => {
+  console.log('Server is listening on port 4000');
+});
+
+docker build -t app:latest .
+touch Dockerfile
+FROM ubuntu:14.04
+
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install curl -y
+RUN curl -SL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+RUN apt-get install -y nodejs && apt-get clean
+
+WORKDIR /app
+ADD package.json /app/package.json
+ADD src/index.js /app/src/index.js
+
+RUN npm install
+
+CMD ["node", "src/index.js"]
+
+
+Keyra:
+VBoxManage modifyvm "default" --natpf1 "tcp-port4000,tcp,,4000,4000";
+docker-machine start default
+docker-machine env default
+docker run -p 4000:4000 -d app:latest
