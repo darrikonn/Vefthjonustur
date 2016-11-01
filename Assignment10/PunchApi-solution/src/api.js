@@ -37,7 +37,7 @@ router.get('/companies', (req, res) => {
   const params = {
     page: req.query.page || 0,
     max: req.query.max || 20,
-    search: req.query.search || ''
+    search: req.query.search || '*'
   };
 
   services.getCompanies(params, (err, docs) => {

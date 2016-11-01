@@ -35,7 +35,7 @@ const getCompanies = (params, cb) => {
     'body': {
       'sort': [{'name': {'order': 'asc'}}],
       'query': {
-        'multi_match': {
+        'query_string': {
           'query': params.search,
           'fields': ['name', 'description']
         }
