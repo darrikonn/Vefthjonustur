@@ -39,7 +39,7 @@ mongoose.connect(url, (err) => {
         'mappings': {
           'company': {
             'properties': {
-              'name': { 'type': 'text' },
+              'name': { 'type': 'keyword' },
               'id': { 'type': 'keyword' },
               'description': { 'type': 'text' }
             }

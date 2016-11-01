@@ -31,9 +31,15 @@ const getCompanies = (params, cb) => {
     'type': 'company',
     '_source': ['id', 'name'],
     'size': params.max,
-    'from': params.page,
+    'from': params.page*params.max,
     'body': {
-      'query': params.query
+      'sort': [{'name': {'order': 'asc'}}],
+      'query': {
+        'multi_match': {
+          'query': params.search,
+          'fields': ['name', 'description']
+        }
+      }
     }
   }).then((doc) => {
     return cb(null, doc.hits.hits.map(d => d._source));

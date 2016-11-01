@@ -5,18 +5,22 @@ In this project we continue on the "Punch card" project, which we now refer to a
 Run `npm install` (or `yarn install` if you're cool) from the source.
 
 ## Run
-In two separate terminals run:
-> TERM1: mkdir /tmp/data && mongod --dbpath /tmp/data <br/>
-  TERM2: mongo<br/>
-         > use app
+Run the following in a terminal to start the mongo server:
+> mkdir /tmp/data && mongod --dbpath /tmp/data <br/>
 
-In yet another terminal, start the elasticsearch server with:
+In another terminal, start the elasticsearch server with:
 > elasticsearch
 
 Finally run the application with:
 > node src/index.js
 
 ## Possible route commands
-curl -i -X GET localhost:5000/api/companies
-curl -i -X GET localhost:5000/api/companies/1
-curl -i -H "Authorization: WubbaLubbaDubDub" -H "Content-Type: application/json" -d '{"name":"TeOgKaffi","punchCount":"2", "description": "Coffee company"}' -X POST localhost:5000/api/companies
+> curl -i -X GET localhost:5000/api/companies
+
+> curl -i -X GET localhost:5000/api/companies?page=0&max=2
+
+> curl -i -X GET localhost:5000/api/companies?search=TeOgKaffi
+
+> curl -i -X GET localhost:5000/api/companies/1
+
+> curl -i -H "Authorization: WubbaLubbaDubDub" -H "Content-Type: application/json" -d '{"name":"TeOgKaffi","punchCount":"2", "description": "Coffee company"}' -X POST localhost:5000/api/companies
