@@ -842,3 +842,39 @@ VBoxManage modifyvm "default" --natpf1 "tcp-port4000,tcp,,4000,4000";
 docker-machine start default
 docker-machine env default
 docker run -p 4000:4000 -d app:latest
+
+Bua til docker image fyrir API, annan image fyrir mongodb, annan fyrir RabbitMQ
+Thegar vid deployum, tha notum vid docker compose. Compose er stadall til ad lysa yfir morgum images og hvernig thaer tala saman
+docker-compose.yml:
+version: '2'
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+    redis:
+      image: redis
+
+
+filter() => skilar allt ad N stokum
+map()   => beytir adgerd a oll stok fylkisins og returnar nyju fylki  (skilar morgum stokum)
+reduce()  => beytir adgerd a oll stok fylkisins og return einu staki (t.d. summa)
+
+const filteredCars = cars.filter((car) => {
+  return car.model === parseInt(req.params.year);
+});
+
+const punchMap = punches.reduce((accumulated, currentElement) => {
+  return Object.assign(accumulated, {[currentElement.name]: currentElement});
+}, {});
+
+
+var result = numbers.filter(item => item%2 === 1).reduce((accumulated, item) => accumulated+item), 0); // summan af oddatolum
+
+
+***NOTE:
+Nota eslint i stadinn fyrir jshint. Betri stuðningur fyrir ES6 og virkar mjög vel með öllu babel eco-systeminu.
