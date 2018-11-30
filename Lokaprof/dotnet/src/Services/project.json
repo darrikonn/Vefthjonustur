@@ -1,0 +1,30 @@
+{
+  "dependencies": {
+    "Microsoft.NETCore.App": {
+      "version": "1.0.0",
+      "type": "platform"
+    },
+    "Models": {
+      "authors": "Darri Steinn Konradsson",
+      "target": "project" 
+    },
+    "Entities": {
+      "authors": "Darri Steinn Konradsson",
+      "target": "project" 
+    }
+  },
+
+  "frameworks": {
+    "netcoreapp1.0": {
+      "imports": [
+        "dotnet5.6",
+        "dnxcore50",
+        "portable-net45+win8"
+      ]
+    }
+  },
+
+  "buildOptions": {
+    "debugType": "portable"
+  }
+}
